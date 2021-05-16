@@ -6,6 +6,7 @@ package util
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -47,15 +48,21 @@ func TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format("2006-01-02 15:04:05.000000"))
 }
 
+// specify codeline's filename and row
 func callerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
 	fullPath := caller.FullPath()
-
-	idx := strings.LastIndexByte(fullPath, '/')
-	if idx == -1 {
-		enc.AppendString(fullPath)
-	} else {
-		enc.AppendString(fullPath[idx+1:])
+	idx := strings.LastIndexByte(fullPath, ':')
+	num := uint64(0)
+	if idx != -1 {
+		num, _ = strconv.ParseUint(fullPath[idx+1:], 10, 32)
+		fullPath = fullPath[:idx]
 	}
+
+	if len(fullPath) > 20 {
+		fullPath = fullPath[len(fullPath)-20:]
+	}
+	fullPath = fmt.Sprintf("%20s:%d", fullPath, num)
+	enc.AppendString(fullPath)
 }
 
 var ALevel zap.AtomicLevel
