@@ -42,8 +42,12 @@ func getLoggerLevel(lvl string) zapcore.Level {
 	return zapcore.InfoLevel
 }
 
-func TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format("2006-01-02 15:04:05.000000"))
+}
+
+func levelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(fmt.Sprintf("%6s", l.CapitalString()))
 }
 
 // specify codeline's filename and row
@@ -96,8 +100,8 @@ func InitLog(filename string) {
 	config := zap.NewDevelopmentEncoderConfig()
 	config.ConsoleSeparator = " "
 
-	//config.EncodeTime = zapcore.ISO8601TimeEncoder
-	config.EncodeTime = TimeEncoder
+	config.EncodeLevel = levelEncoder
+	config.EncodeTime = timeEncoder
 	config.EncodeCaller = callerEncoder
 
 	//encoder := zapcore.NewJSONEncoder(config)
