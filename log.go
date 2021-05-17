@@ -6,8 +6,6 @@ package util
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 	"time"
 
 	"go.uber.org/zap"
@@ -51,18 +49,24 @@ func TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 // specify codeline's filename and row
 func callerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
 	fullPath := caller.FullPath()
-	idx := strings.LastIndexByte(fullPath, ':')
-	num := uint64(0)
-	if idx != -1 {
-		num, _ = strconv.ParseUint(fullPath[idx+1:], 10, 32)
-		fullPath = fullPath[:idx]
-	}
+	// idx := strings.LastIndexByte(fullPath, ':')
+	// num := uint64(0)
+	// if idx != -1 {
+	// 	num, _ = strconv.ParseUint(fullPath[idx+1:], 10, 32)
+	// 	fullPath = fullPath[:idx]
+	// }
+
+	// if len(fullPath) > 20 {
+	// 	fullPath = fullPath[len(fullPath)-20:]
+	// }
+
+	// enc.AppendString(fmt.Sprintf("%20s:%d", fullPath, num))
 
 	if len(fullPath) > 20 {
-		fullPath = fullPath[len(fullPath)-20:]
+		enc.AppendString(fmt.Sprintf("%20.20s", fullPath[len(fullPath)-20:]))
+	} else {
+		enc.AppendString(fmt.Sprintf("%20.20s", fullPath))
 	}
-	fullPath = fmt.Sprintf("%20s:%d", fullPath, num)
-	enc.AppendString(fullPath)
 }
 
 var ALevel zap.AtomicLevel
