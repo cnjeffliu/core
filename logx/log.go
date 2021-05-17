@@ -2,7 +2,7 @@
 * 日志组件封装
 * jeff.liu <zhifeng172@163.com> 20190126
  */
-package util
+package logx
 
 import (
 	"fmt"
