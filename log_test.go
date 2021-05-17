@@ -3,7 +3,7 @@ package util
 import "testing"
 
 func TestWriteLog(t *testing.T) {
-	InitLog("D:\\output.log")
+	InitLog("output.log")
 
 	Debug("test")
 }

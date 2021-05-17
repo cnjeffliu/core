@@ -88,8 +88,9 @@ func InitLog(filename string) {
 	//)
 	//zapLogger = zap.New(core)
 
-	//config := zap.NewProductionEncoderConfig()
+	// config := zap.NewProductionEncoderConfig()
 	config := zap.NewDevelopmentEncoderConfig()
+	config.ConsoleSeparator = " "
 
 	//config.EncodeTime = zapcore.ISO8601TimeEncoder
 	config.EncodeTime = TimeEncoder
