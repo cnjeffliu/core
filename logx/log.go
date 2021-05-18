@@ -6,6 +6,9 @@ package logx
 
 import (
 	"fmt"
+	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
 
 	"go.uber.org/zap"
@@ -13,7 +16,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-var zapLogger *zap.Logger
+var logger *zap.Logger
 
 var levelMap = map[string]zapcore.Level{
 	"debug":  zapcore.DebugLevel,
@@ -25,17 +28,17 @@ var levelMap = map[string]zapcore.Level{
 	"fatal":  zapcore.FatalLevel,
 }
 
-func toStr(template string, fmtArgs []interface{}) string {
-	msg := template
+func toStr(format string, fmtArgs []interface{}) string {
+	msg := format
 	if msg == "" && len(fmtArgs) > 0 {
 		msg = fmt.Sprint(fmtArgs...)
 	} else if msg != "" && len(fmtArgs) > 0 {
-		msg = fmt.Sprintf(template, fmtArgs...)
+		msg = fmt.Sprintf(format, fmtArgs...)
 	}
 	return msg
 }
 
-func getLoggerLevel(lvl string) zapcore.Level {
+func getLogLevel(lvl string) zapcore.Level {
 	if level, ok := levelMap[lvl]; ok {
 		return level
 	}
@@ -47,7 +50,7 @@ func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 }
 
 func levelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(fmt.Sprintf("%6s", l.CapitalString()))
+	enc.AppendString(fmt.Sprintf("%5s", l.CapitalString()))
 }
 
 // specify codeline's filename and row
@@ -66,18 +69,28 @@ func callerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder
 
 	// enc.AppendString(fmt.Sprintf("%20s:%d", fullPath, num))
 
-	if len(fullPath) > 20 {
-		enc.AppendString(fmt.Sprintf("%20.20s", fullPath[len(fullPath)-20:]))
-	} else {
-		enc.AppendString(fmt.Sprintf("%20.20s", fullPath))
+	idx := strings.LastIndexByte(fullPath, ':')
+	num := uint64(0)
+	if idx >= 0 {
+		num, _ = strconv.ParseUint(fullPath[idx+1:], 10, 32)
+		fullPath = fullPath[:idx]
 	}
+
+	fullPath, fileName := filepath.Split(fullPath)
+	idx = strings.LastIndexByte(fullPath[:len(fullPath)-1], '/')
+	if idx >= 0 {
+		fullPath = fullPath[idx+1:]
+	}
+
+	fullPath = fullPath + fileName
+	enc.AppendString(fmt.Sprintf("%18s:%-4d", fullPath, num))
 }
 
-var ALevel zap.AtomicLevel
+var aLevel zap.AtomicLevel
 
 func InitLog(filename string) {
-	ALevel = zap.NewAtomicLevel()
-	ALevel.SetLevel(getLoggerLevel("debug"))
+	aLevel = zap.NewAtomicLevel()
+	aLevel.SetLevel(getLogLevel("debug"))
 
 	hook := lumberjack.Logger{
 		Filename:   filename,
@@ -94,11 +107,11 @@ func InitLog(filename string) {
 	//	// 打印在文件中
 	//	zapcore.NewCore(consoleEncoder, fileWriter, highPriority),
 	//)
-	//zapLogger = zap.New(core)
+	//logger = zap.New(core)
 
 	// config := zap.NewProductionEncoderConfig()
 	config := zap.NewDevelopmentEncoderConfig()
-	config.ConsoleSeparator = " "
+	config.ConsoleSeparator = " | "
 
 	config.EncodeLevel = levelEncoder
 	config.EncodeTime = timeEncoder
@@ -107,48 +120,57 @@ func InitLog(filename string) {
 	//encoder := zapcore.NewJSONEncoder(config)
 	encoder := zapcore.NewConsoleEncoder(config)
 
-	core := zapcore.NewCore(encoder, fileWriter, ALevel)
-	zapLogger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
+	core := zapcore.NewCore(encoder, fileWriter, aLevel)
+	logger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
 }
 
-func SetLevel(lvl string) {
-	ALevel.SetLevel(getLoggerLevel(lvl))
+func SetLogLevel(lvl string) {
+	aLevel.SetLevel(getLogLevel(lvl))
 }
 
 func Debug(args ...interface{}) {
-	zapLogger.Debug(fmt.Sprint(args...))
+	logger.Debug(fmt.Sprint(args...))
 }
 
 func Debugf(fmt string, args ...interface{}) {
-	zapLogger.Debug(toStr(fmt, args))
+	logger.Debug(toStr(fmt, args))
 }
 
 func Info(args ...interface{}) {
-	zapLogger.Info(fmt.Sprint(args...))
+	logger.Info(fmt.Sprint(args...))
 }
 
 func Infof(fmt string, args ...interface{}) {
-	zapLogger.Info(toStr(fmt, args))
+	logger.Info(toStr(fmt, args))
 }
 
 func Warn(args ...interface{}) {
-	zapLogger.Warn(fmt.Sprint(args...))
+	logger.Warn(fmt.Sprint(args...))
 }
 
 func Warnf(fmt string, args ...interface{}) {
-	zapLogger.Warn(toStr(fmt, args))
+	logger.Warn(toStr(fmt, args))
 }
 
 func Error(args ...interface{}) {
-	zapLogger.Error(fmt.Sprint(args...))
+	logger.Error(fmt.Sprint(args...))
 }
 func Errorf(fmt string, args ...interface{}) {
-	zapLogger.Error(toStr(fmt, args))
+	logger.Error(toStr(fmt, args))
 }
 
 func Fatal(args ...interface{}) {
-	zapLogger.Fatal(fmt.Sprint(args...))
+	logger.Fatal(fmt.Sprint(args...))
 }
 func Fatalf(fmt string, args ...interface{}) {
-	zapLogger.Fatal(toStr(fmt, args))
+	logger.Fatal(toStr(fmt, args))
+}
+
+func Panic(args ...interface{}) {
+	logger.Fatal(fmt.Sprint(args...))
+	panic(fmt.Sprint(args...))
+}
+func Panicf(fmt string, args ...interface{}) {
+	logger.Fatal(toStr(fmt, args))
+	panic(toStr(fmt, args))
 }
