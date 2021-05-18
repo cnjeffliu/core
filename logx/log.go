@@ -7,7 +7,6 @@ package logx
 import (
 	"fmt"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
@@ -46,44 +45,24 @@ func getLogLevel(lvl string) zapcore.Level {
 }
 
 func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format("2006-01-02 15:04:05.000000"))
+	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
 }
 
 func levelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(fmt.Sprintf("%5s", l.CapitalString()))
 }
 
-// specify codeline's filename and row
 func callerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
 	fullPath := caller.FullPath()
-	// idx := strings.LastIndexByte(fullPath, ':')
-	// num := uint64(0)
-	// if idx != -1 {
-	// 	num, _ = strconv.ParseUint(fullPath[idx+1:], 10, 32)
-	// 	fullPath = fullPath[:idx]
-	// }
-
-	// if len(fullPath) > 20 {
-	// 	fullPath = fullPath[len(fullPath)-20:]
-	// }
-
-	// enc.AppendString(fmt.Sprintf("%20s:%d", fullPath, num))
-
-	idx := strings.LastIndexByte(fullPath, ':')
-	num := uint64(0)
-	if idx >= 0 {
-		num, _ = strconv.ParseUint(fullPath[idx+1:], 10, 32)
-		fullPath = fullPath[:idx]
-	}
 
 	fullPath, fileName := filepath.Split(fullPath)
-	idx = strings.LastIndexByte(fullPath[:len(fullPath)-1], '/')
+	idx := strings.LastIndexByte(fullPath[:len(fullPath)-1], '/')
 	if idx >= 0 {
 		fullPath = fullPath[idx+1:]
 	}
 
 	fullPath = fullPath + fileName
-	enc.AppendString(fmt.Sprintf("%18s:%-4d", fullPath, num))
+	enc.AppendString(fmt.Sprintf("%20s", fullPath))
 }
 
 var aLevel zap.AtomicLevel
