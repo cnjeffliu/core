@@ -7,20 +7,44 @@ import (
 
 type WindowLimit struct {
 	lock   sync.RWMutex
-	max    uint64
+	limit  uint64
 	period int64
 	win    []int64
 }
 
+const (
+	defaultLimit  = 500
+	defaultPeriod = 60 * 1e3 // 60s
+)
+
+type WindowLimitOption func(w *WindowLimit)
+
+func WithLimit(cnt uint64) WindowLimitOption {
+	return func(w *WindowLimit) {
+		w.limit = cnt
+	}
+}
+
+// period sec
+func WithPeriod(period int64) WindowLimitOption {
+	return func(w *WindowLimit) {
+		w.period = period * 1e3
+	}
+}
+
 /*
- count: max num in a period
+ max: limit num in a period
  period: second
 */
-func NewWindowLimit(count uint64, period int64) *WindowLimit {
+func NewWindowLimit(opts ...WindowLimitOption) *WindowLimit {
 	wl := &WindowLimit{
-		max:    count,
-		period: period * 1e3,
+		limit:  defaultLimit,
+		period: defaultPeriod,
 		win:    make([]int64, 0),
+	}
+
+	for _, opt := range opts {
+		opt(wl)
 	}
 
 	return wl
@@ -32,7 +56,7 @@ func (wl *WindowLimit) Access() bool {
 	wl.lock.Lock()
 	defer wl.lock.Unlock()
 
-	if uint64(len(wl.win)) < wl.max {
+	if uint64(len(wl.win)) < wl.limit {
 		wl.win = append(wl.win, now)
 		return true
 	}
@@ -52,12 +76,13 @@ func (wl *WindowLimit) Count() uint64 {
 	wl.lock.RLock()
 	defer wl.lock.RUnlock()
 
-	idx := wl.max
+	idx := uint64(0)
 	for k, v := range wl.win {
 		if now-v < wl.period {
 			idx = uint64(k)
 			break
 		}
 	}
+
 	return uint64(len(wl.win)) - idx
 }
