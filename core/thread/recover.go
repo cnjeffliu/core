@@ -2,7 +2,7 @@ package thread
 
 import (
 	"fmt"
-	"serv/core/core/logx"
+	"serv/core/logx"
 )
 
 func Recover(cleanups ...func()) {
