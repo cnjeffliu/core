@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -18,7 +17,7 @@ type HttpxClient struct {
 
 type httpxClientOption func(r *http.Request)
 
-const default_timeout = 5 * time.Second
+const defaultTimeout = 5 * time.Second
 
 var client *HttpxClient
 
@@ -30,7 +29,7 @@ func NewHttpxCli() *HttpxClient {
 
 		cli := &http.Client{
 			Transport: tr,
-			Timeout:   default_timeout,
+			Timeout:   defaultTimeout,
 		}
 		client = &HttpxClient{
 			cli: cli,
@@ -39,12 +38,16 @@ func NewHttpxCli() *HttpxClient {
 	return client
 }
 
-func (h *HttpxClient) GetJSON(url string, opts ...httpxClientOption) []byte {
-	return h.Get(url, WithJSONContent(), opts...)
+func (h *HttpxClient) GetJSON(url string, opts ...httpxClientOption) ([]byte, error) {
+	args := []httpxClientOption{WithJSONContent()}
+	for _, v := range opts {
+		args = append(args, v)
+	}
+	return h.Get(url, args...)
 }
 
 func (h *HttpxClient) Get(url string, opts ...httpxClientOption) ([]byte, error) {
-	return h.GetWithOptions(url, default_timeout, opts...)
+	return h.GetWithOptions(url, defaultTimeout, opts...)
 }
 
 func (h *HttpxClient) GetWithOptions(url string, timeout time.Duration, opts ...httpxClientOption) ([]byte, error) {
@@ -69,15 +72,19 @@ func (h *HttpxClient) GetWithOptions(url string, timeout time.Duration, opts ...
 	return ioutil.ReadAll(resp.Body)
 }
 
-func (h *HttpxClient) PostJSON(url string, body interface{}) []byte {
-	return h.Post(url, body, WithJSONContent())
+func (h *HttpxClient) PostJSON(url string, body interface{}, opts ...httpxClientOption) ([]byte, error) {
+	args := []httpxClientOption{WithJSONContent()}
+	for _, v := range opts {
+		args = append(args, v)
+	}
+	return h.Post(url, body, args...)
 }
 
-func (h *HttpxClient)Post(url string, body interface{}, opts...httpxClientOption) ([]byte, error) {
-	return h.PostWithOptions(url, default_timeout, body, opts...)
+func (h *HttpxClient) Post(url string, body interface{}, opts ...httpxClientOption) ([]byte, error) {
+	return h.PostWithOptions(url, defaultTimeout, body, opts...)
 }
 
-func (h *HttpxClient)PostWithOptions(url string, timeout time.Duration, body interface{}, opts...httpxClientOption) ([]byte, error) {
+func (h *HttpxClient) PostWithOptions(url string, timeout time.Duration, body interface{}, opts ...httpxClientOption) ([]byte, error) {
 	var bodyJson []byte
 	var req *http.Request
 	if body != nil {
@@ -110,7 +117,7 @@ func (h *HttpxClient)PostWithOptions(url string, timeout time.Duration, body int
 }
 
 func WithJSONContent() httpxClientOption {
-	return (r *http.Request){
+	return func(r *http.Request) {
 		r.Header.Add("Content-Type", "application/json; charset=utf-8")
 	}
 }
