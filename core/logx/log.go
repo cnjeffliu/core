@@ -1,6 +1,6 @@
 /*
 * 日志组件封装
-* jeff.liu <zhifeng172@163.com> 20190126
+* jeff.liu <zhifeng172@163.com> 2019.01.26
  */
 package logx
 

@@ -1,7 +1,11 @@
+/*
+* 滑动窗口限流
+* Jeff.Liu <zhifeng172@163.com> 2021.07.12
+**/
 package limit
 
 import (
-	"serv/timex"
+	"serv/core/timex"
 	"sync"
 )
 

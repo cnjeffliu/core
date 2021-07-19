@@ -9,7 +9,7 @@ import (
 )
 
 func TestWindowLimit(t *testing.T) {
-	wl := NewWindowLimit(500, 1)
+	wl := NewWindowLimit(WithLimit(500), WithPeriod(1))
 	total := 0
 	succ := 0
 
@@ -42,7 +42,7 @@ func TestMultWindowLimit(t *testing.T) {
 
 		wlp, ok := sm.Load(key)
 		if !ok {
-			sm.Store(key, NewWindowLimit(500, 10))
+			sm.Store(key, NewWindowLimit(WithLimit(500), WithPeriod(10)))
 			wlp, _ = sm.Load(key)
 		}
 		wl := wlp.(*WindowLimit)

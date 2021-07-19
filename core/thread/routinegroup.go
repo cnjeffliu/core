@@ -1,4 +1,4 @@
-package threading
+package thread
 
 import "sync"
 
@@ -18,6 +18,7 @@ func (g *RoutineGroup) Run(fn func()) {
 		fn()
 	}()
 }
+
 func (g *RoutineGroup) RunSafe(fn func()) {
 	g.waitGroup.Add(1)
 
