@@ -1,4 +1,4 @@
-package cryptox
+package algorithm
 
 import (
 	"crypto/rand"
