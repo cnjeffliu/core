@@ -6,6 +6,7 @@ package sqlx
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -51,4 +52,8 @@ func WithMaxOpenConns(n int) MySQLOption {
 	return func(db *sql.DB) {
 		db.SetMaxOpenConns(n)
 	}
+}
+
+func BuildDataSourceName(uname, passwd, host, port, dbname string) (dsn string) {
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4", uname, passwd, host, port, dbname)
 }

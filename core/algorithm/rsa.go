@@ -8,6 +8,7 @@ import (
 	"errors"
 )
 
+// Decrypt
 func Decrypt(privKey []byte, ciphertext []byte) ([]byte, error) {
 	block, _ := pem.Decode(privKey)
 	if block == nil {
