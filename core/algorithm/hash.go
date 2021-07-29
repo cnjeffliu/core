@@ -1,3 +1,8 @@
+/*
+ * @Author: Jeffrey <zhifeng172@163.com>
+ * @Date: 2021-07-21 15:52:04
+ * @Descripttion:
+ */
 package algorithm
 
 import (
@@ -8,45 +13,29 @@ import (
 )
 
 // MD5
-func MD5(input []byte) ([]byte, error) {
+func MD5(input []byte) []byte {
 	hash := md5.New()
-	_, err := hash.Write(input)
-	if err != nil {
-		return nil, err
-	}
-
-	return hash.Sum(nil), nil
+	hash.Write(input)
+	return hash.Sum(nil)
 }
 
 // SHA1
-func SHA1(input []byte) ([]byte, error) {
+func SHA1(input []byte) []byte {
 	hash := sha1.New()
-	_, err := hash.Write(input)
-	if err != nil {
-		return nil, err
-	}
-
-	return hash.Sum(nil), nil
+	hash.Write(input)
+	return hash.Sum(nil)
 }
 
 // SHA256
-func SHA256(input []byte) ([]byte, error) {
+func SHA256(input []byte) []byte {
 	hash := sha256.New()
-	_, err := hash.Write(input)
-	if err != nil {
-		return nil, err
-	}
-
-	return hash.Sum(nil), nil
+	hash.Write(input)
+	return hash.Sum(nil)
 }
 
 // SHA512
-func SHA512(input []byte) ([]byte, error) {
+func SHA512(input []byte) []byte {
 	hash := sha512.New()
-	_, err := hash.Write(input)
-	if err != nil {
-		return nil, err
-	}
-
-	return hash.Sum(nil), nil
+	hash.Write(input)
+	return hash.Sum(nil)
 }
