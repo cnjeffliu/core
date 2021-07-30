@@ -17,7 +17,6 @@ func TestContext(t *testing.T) {
 	err := BadRequest.New("an_error")
 	errWithContext := errorx.AddErrorContext(err, "the field is empty")
 	expectedContext := "the field is empty"
-	t.Log(errorx.GetErrorContext(errWithContext))
 
 	assert.Equal(t, BadRequest, errorx.GetType(errWithContext))
 	assert.Equal(t, expectedContext, errorx.GetErrorContext(errWithContext))
@@ -38,9 +37,10 @@ func TestContextInNoTypeError(t *testing.T) {
 func TestWrapf(t *testing.T) {
 	err := errorx.New("an_error")
 	wrappedError := BadRequest.Wrapf(err, "error %s", "1")
+	wrappedError = BadRequest.Wrapf(wrappedError, "error %s", "2")
 
 	assert.Equal(t, BadRequest, errorx.GetType(wrappedError))
-	assert.EqualError(t, wrappedError, "error 1: an_error")
+	assert.EqualError(t, wrappedError, "error 2: error 1: an_error")
 }
 
 func TestWrapfInNoTypeError(t *testing.T) {

@@ -18,11 +18,11 @@ type customError struct {
 }
 
 type errorContext struct {
-	Message string
+	msg string
 }
 
 func (ctx errorContext) Msg() string {
-	return ctx.Message
+	return ctx.msg
 }
 
 // New creates a new customError
@@ -86,7 +86,7 @@ func Wrapf(err error, msg string, args ...interface{}) error {
 
 // AddErrorContext adds a context to an error
 func AddErrorContext(err error, message string) error {
-	context := errorContext{Message: message}
+	context := errorContext{msg: message}
 	if customErr, ok := err.(customError); ok {
 		return customError{errorType: customErr.errorType, originalError: customErr.originalError, context: context}
 	}
