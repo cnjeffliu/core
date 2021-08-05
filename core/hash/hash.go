@@ -3,7 +3,7 @@
  * @Date: 2021-07-21 15:52:04
  * @Descripttion:
  */
-package algorithm
+package hash
 
 import (
 	"crypto/md5"

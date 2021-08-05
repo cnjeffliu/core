@@ -1,4 +1,4 @@
-package algorithm
+package codec
 
 import (
 	"crypto/rand"

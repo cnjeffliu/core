@@ -3,7 +3,7 @@
  * @Date: 2021-07-21 15:55:09
  * @Descripttion:
  */
-package algorithm
+package hash
 
 import (
 	"testing"
