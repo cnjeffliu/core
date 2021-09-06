@@ -22,7 +22,7 @@ type etcdCliOption func(c *clientv3.Config)
 const defaultTimeout time.Duration = 5 * time.Second
 
 var (
-	addrs = []string{"127.0.0.1:2379"}
+	defaultEndpoints = []string{"127.0.0.1:2379"}
 )
 
 func WithEndpoints(endpoints []string) etcdCliOption {
@@ -60,7 +60,7 @@ func InitEtcd(ca string, key string, cert string, opts ...etcdCliOption) (etcdCl
 	}
 
 	cfg := clientv3.Config{
-		Endpoints:   addrs,
+		Endpoints:   defaultEndpoints,
 		DialTimeout: defaultTimeout,
 		TLS:         tlsConfig,
 	}
