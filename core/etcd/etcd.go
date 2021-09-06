@@ -117,13 +117,13 @@ func (cli *EtcdClient) Delete(key string) error {
 	return err
 }
 
-func (cli *EtcdClient) PutWithLease(key string, timeout int64) (err error) {
+func (cli *EtcdClient) PutWithLease(key, value string, timeout int64) (err error) {
 	leaseResp, err := cli.lease.Grant(context.TODO(), timeout)
 	if err != nil {
 		return
 	}
 
-	_, err = cli.kv.Put(context.TODO(), key, "", clientv3.WithLease(leaseResp.ID))
+	_, err = cli.kv.Put(context.TODO(), key, value, clientv3.WithLease(leaseResp.ID))
 	if err != nil {
 		return
 	}
