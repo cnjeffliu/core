@@ -4,14 +4,3 @@
  * @Descripttion:
  */
 package cmd
-
-import (
-	"serv/core/errorx"
-)
-
-const (
-	// BadRequest error
-	BadRequest errorx.ErrorType = iota + 1
-	// NotFound error
-	NotFound
-)
