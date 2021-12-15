@@ -1,8 +1,15 @@
+/*
+ * @Author: Jeffrey.Liu <zhifeng172@163.com>
+ * @Date: 2021-12-15 14:18:20
+ * @LastEditors: Jeffrey.Liu
+ * @LastEditTime: 2021-12-15 15:40:43
+ * @Description:
+ */
 package thread
 
 import (
 	"fmt"
-	"serv/core/logx"
+	"os"
 )
 
 func Recover(cleanups ...func()) {
@@ -11,6 +18,7 @@ func Recover(cleanups ...func()) {
 	}
 
 	if p := recover(); p != nil {
-		logx.Fatal(fmt.Sprint(p))
+		os.Stdout.WriteString(fmt.Sprint(p))
+
 	}
 }

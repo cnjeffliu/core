@@ -1,3 +1,10 @@
+/*
+ * @Author: Jeffrey.Liu <zhifeng172@163.com>
+ * @Date: 2021-08-18 18:07:12
+ * @LastEditors: Jeffrey.Liu
+ * @LastEditTime: 2021-11-26 15:29:06
+ * @Description: 控制超时时间运行函数
+ */
 package funx
 
 import (

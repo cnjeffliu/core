@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-06 14:45:26
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-08 10:42:58
+ * @LastEditTime: 2021-12-11 19:11:00
  * @Description: k8s操作处理类
  */
 package k8s
@@ -33,7 +33,7 @@ const (
 	STATUS_RUNNING           // pod running, not be in deleting
 	STATUS_PENDING           // pending,  kubelet scheduled, deletetimestamp is nil
 	STATUS_UNASSIGNED        // not kubelet scheduled
-	STATUS_OTHER_ERR
+	STATUS_ERROR
 )
 
 const (
@@ -118,21 +118,7 @@ func (c *K8SCli) ListPods(opts ...K8SCliOption) []corev1.Pod {
 	return podList.Items
 }
 
-func (c *K8SCli) GetPod(name string, opts ...K8SCliOption) *corev1.Pod {
-	var namespace string = corev1.NamespaceDefault
-	for _, opt := range opts {
-		namespace = opt()
-	}
-
-	pod, err := c.podLister.Pods(namespace).Get(name)
-	if err != nil {
-		return nil
-	}
-
-	return pod
-}
-
-func (c *K8SCli) GetPodStatus(name string, opts ...K8SCliOption) (STATUS, error) {
+func (c *K8SCli) GetPod(name string, opts ...K8SCliOption) (STATUS, *v1.Pod, error) {
 	var namespace string = corev1.NamespaceDefault
 	for _, opt := range opts {
 		namespace = opt()
@@ -141,24 +127,24 @@ func (c *K8SCli) GetPodStatus(name string, opts ...K8SCliOption) (STATUS, error)
 	pod, err := c.podLister.Pods(namespace).Get(name)
 	if errors.IsNotFound(err) {
 		fmt.Println("Error not found pod")
-		return STATUS_NOT_FOUND, err
+		return STATUS_NOT_FOUND, nil, err
 	}
 
 	if err == nil {
 		if pod.Status.StartTime == nil {
-			return STATUS_UNASSIGNED, nil
+			return STATUS_UNASSIGNED, pod, nil
 		} else if pod.DeletionTimestamp != nil {
-			return STATUS_DELETED, nil
+			return STATUS_DELETED, pod, nil
 		} else if pod.Status.Phase == v1.PodRunning {
-			return STATUS_RUNNING, nil
+			return STATUS_RUNNING, pod, nil
 		} else if pod.Status.Phase == v1.PodPending && pod.Status.StartTime != nil {
-			return STATUS_PENDING, nil
+			return STATUS_PENDING, pod, nil
 		}
 
-		return STATUS_UNKNOWN, nil
+		return STATUS_UNKNOWN, pod, nil
 	}
 
-	return STATUS_OTHER_ERR, err
+	return STATUS_ERROR, nil, err
 }
 
 func GetPodTypeMeta() metav1.TypeMeta {

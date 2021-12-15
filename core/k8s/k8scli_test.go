@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-07-19 11:58:51
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-08 10:19:23
+ * @LastEditTime: 2021-12-15 15:33:30
  * @Description:
  */
 package k8s
@@ -82,7 +82,7 @@ func TestListPods(t *testing.T) {
 func TestGetPod(t *testing.T) {
 	InitK8s(WithKubeConfigPatterm("./cluster*"))
 
-	pod := ClientSet[1].GetPod("mobile-89023")
+	_, pod, _ := ClientSet[1].GetPod("mobile-89023")
 	if pod != nil {
 		fmt.Println(pod.Name, pod.Labels, pod.Status.HostIP, pod.Status.PodIP, pod.Status.Phase)
 	} else {
@@ -95,7 +95,7 @@ func TestExistedPod(t *testing.T) {
 
 	time.Sleep(3 * time.Second)
 
-	status, _ := ClientSet[1].GetPodStatus("mobile-89023")
+	status, _, _ := ClientSet[1].GetPod("mobile-89023")
 	if status == STATUS_RUNNING {
 		fmt.Println("found pod")
 	} else {
