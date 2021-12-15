@@ -1,0 +1,19 @@
+root="root_string"
+
+[group]
+key = "driver11"
+value = 1000
+
+[groups.grp1]
+[groups.grp1.dev]
+key = "grp1111"
+value = 1111
+
+[groups.grp1.pro]
+key = "grp2222"
+value = 2222
+
+[groups.grp2]
+[groups.grp2.dev]
+key = 'grp3333'
+value = 3333

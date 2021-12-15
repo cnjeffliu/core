@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
+	github.com/fsnotify/fsnotify v1.4.7
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
@@ -19,6 +20,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/shima-park/agollo v1.2.10
 	github.com/sirupsen/logrus v1.7.0 // indirect
+	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/etcd v3.3.25+incompatible
 	go.uber.org/atomic v1.8.0 // indirect

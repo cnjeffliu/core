@@ -19,6 +19,5 @@ func Recover(cleanups ...func()) {
 
 	if p := recover(); p != nil {
 		os.Stdout.WriteString(fmt.Sprint(p))
-
 	}
 }

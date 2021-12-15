@@ -1,13 +1,19 @@
+/*
+ * @Author: Jeffrey.Liu <zhifeng172@163.com>
+ * @Date: 2021-12-06 18:23:54
+ * @LastEditors: Jeffrey.Liu
+ * @LastEditTime: 2021-12-15 16:30:04
+ * @Description:
+ */
 package confx
 
 import (
 	"fmt"
-	"testing"
 
 	"github.com/shima-park/agollo"
 )
 
-func TestApollo(t *testing.T) {
+func TestApollo() {
 	// 通过默认根目录下的app.properties初始化agollo
 	// err := agollo.InitWithDefaultConfigFile(
 	// 	agollo.WithLogger(agollo.NewLogger(agollo.LoggerWriter(os.Stdout))), // 打印日志信息

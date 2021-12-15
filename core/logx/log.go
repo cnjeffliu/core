@@ -1,6 +1,9 @@
 /*
-* 日志组件封装
-* jeff.liu <zhifeng172@163.com> 2019.01.26
+ * @Author: Jeffrey.Liu <zhifeng172@163.com>
+ * @Date: 2019-01-26 15:20:02
+ * @LastEditors: Jeffrey.Liu
+ * @LastEditTime: 2021-12-15 16:26:24
+ * @Description: 日志组件封装
  */
 package logx
 
@@ -16,6 +19,7 @@ import (
 )
 
 var logger *zap.Logger
+var aLevel zap.AtomicLevel
 
 var levelMap = map[string]zapcore.Level{
 	"debug":  zapcore.DebugLevel,
@@ -27,6 +31,49 @@ var levelMap = map[string]zapcore.Level{
 	"fatal":  zapcore.FatalLevel,
 }
 
+type LogOption func() string
+
+func Init(opts ...LogOption) {
+	filename := "./log/debug.log"
+
+	for _, opt := range opts {
+		filename = opt()
+	}
+
+	aLevel = zap.NewAtomicLevel()
+	aLevel.SetLevel(getLogLevel("debug"))
+
+	hook := lumberjack.Logger{
+		Filename:   filename,
+		MaxSize:    200, // megabytes
+		MaxBackups: 10,
+		MaxAge:     7,    //days
+		Compress:   true, // disabled by default
+	}
+
+	fileWriter := zapcore.AddSync(&hook)
+
+	//consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
+	//core := zapcore.NewTee(
+	//	zapcore.NewCore(consoleEncoder, fileWriter, highPriority),
+	//)
+	//logger = zap.New(core)
+
+	// config := zap.NewProductionEncoderConfig()
+	config := zap.NewDevelopmentEncoderConfig()
+	config.ConsoleSeparator = " | "
+
+	config.EncodeLevel = levelEncoder
+	config.EncodeTime = timeEncoder
+	config.EncodeCaller = callerEncoder
+
+	//encoder := zapcore.NewJSONEncoder(config)
+	encoder := zapcore.NewConsoleEncoder(config)
+
+	core := zapcore.NewCore(encoder, fileWriter, aLevel)
+	logger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
+}
+
 func toStr(format string, fmtArgs []interface{}) string {
 	msg := format
 	if msg == "" && len(fmtArgs) > 0 {
@@ -35,6 +82,12 @@ func toStr(format string, fmtArgs []interface{}) string {
 		msg = fmt.Sprintf(format, fmtArgs...)
 	}
 	return msg
+}
+
+func WithFile(logpath string) LogOption {
+	return func() string {
+		return logpath
+	}
 }
 
 func getLogLevel(lvl string) zapcore.Level {
@@ -63,44 +116,6 @@ func callerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder
 
 	fullPath = fullPath + fileName
 	enc.AppendString(fmt.Sprintf("%20s", fullPath))
-}
-
-var aLevel zap.AtomicLevel
-
-func InitLog(filename string) {
-	aLevel = zap.NewAtomicLevel()
-	aLevel.SetLevel(getLogLevel("debug"))
-
-	hook := lumberjack.Logger{
-		Filename:   filename,
-		MaxSize:    30, // megabytes
-		MaxBackups: 10,
-		MaxAge:     7,    //days
-		Compress:   true, // disabled by default
-	}
-
-	fileWriter := zapcore.AddSync(&hook)
-
-	//consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
-	//core := zapcore.NewTee(
-	//	// 打印在文件中
-	//	zapcore.NewCore(consoleEncoder, fileWriter, highPriority),
-	//)
-	//logger = zap.New(core)
-
-	// config := zap.NewProductionEncoderConfig()
-	config := zap.NewDevelopmentEncoderConfig()
-	config.ConsoleSeparator = " | "
-
-	config.EncodeLevel = levelEncoder
-	config.EncodeTime = timeEncoder
-	config.EncodeCaller = callerEncoder
-
-	//encoder := zapcore.NewJSONEncoder(config)
-	encoder := zapcore.NewConsoleEncoder(config)
-
-	core := zapcore.NewCore(encoder, fileWriter, aLevel)
-	logger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
 }
 
 func SetLogLevel(lvl string) {
