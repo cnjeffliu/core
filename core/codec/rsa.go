@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-08-05 17:31:50
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-16 17:01:10
+ * @LastEditTime: 2021-12-16 17:15:59
  * @Description: 加密解密工具类
  */
 package codec
@@ -18,11 +18,8 @@ import (
 )
 
 var (
-	// ErrPrivateKey indicates the invalid private key.
-	ErrPrivateKey = errors.New("private key error")
-	// ErrPublicKey indicates the invalid public key.
-	ErrPublicKey = errors.New("failed to parse PEM block containing the public key")
-	// ErrNotRsaKey indicates the invalid RSA key.
+	ErrPrivKey   = errors.New("private key error")
+	ErrPubKey    = errors.New("failed to parse PEM block containing the public key")
 	ErrNotRsaKey = errors.New("key type is not RSA")
 )
 
@@ -45,48 +42,48 @@ type (
 
 	rsaDecrypter struct {
 		rsaBase
-		privateKey *rsa.PrivateKey
+		privKey *rsa.PrivateKey
 	}
 
 	rsaEncrypter struct {
 		rsaBase
-		publicKey *rsa.PublicKey
+		pubKey *rsa.PublicKey
 	}
 )
 
-// NewRsaDecrypter returns a RsaDecrypter with the given file.
-func NewRsaDecryptWithFile(file string) (RsaDecrypter, error) {
-	content, err := ioutil.ReadFile(file)
+// NewRsaDecrypter returns a RsaDecrypter with the given privfile.
+func NewRsaDecrypterWithFile(privfile string) (RsaDecrypter, error) {
+	content, err := ioutil.ReadFile(privfile)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewRsaDecrypt(content)
+	return NewRsaDecrypter(content)
 }
 
 // NewRsaDecrypter returns a RsaDecrypter with the key content.
-func NewRsaDecrypt(content []byte) (RsaDecrypter, error) {
+func NewRsaDecrypter(content []byte) (RsaDecrypter, error) {
 	block, _ := pem.Decode(content)
 	if block == nil {
-		return nil, ErrPrivateKey
+		return nil, ErrPrivKey
 	}
 
-	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	privKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		return nil, err
 	}
 
 	return &rsaDecrypter{
 		rsaBase: rsaBase{
-			bytesLimit: privateKey.N.BitLen() >> 3,
+			bytesLimit: privKey.N.BitLen() >> 3,
 		},
-		privateKey: privateKey,
+		privKey: privKey,
 	}, nil
 }
 
 func (r *rsaDecrypter) Decrypt(input []byte) ([]byte, error) {
 	return r.crypt(input, func(block []byte) ([]byte, error) {
-		return rsaDecryptBlock(r.privateKey, block)
+		return rsaDecryptBlock(r.privKey, block)
 	})
 }
 
@@ -103,11 +100,20 @@ func (r *rsaDecrypter) DecryptBase64(input string) ([]byte, error) {
 	return r.Decrypt(base64Decoded)
 }
 
+func NewRsaEncrypterWithFile(pubfile string) (RsaEncrypter, error) {
+	content, err := ioutil.ReadFile(pubfile)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewRsaEncrypter(content)
+}
+
 // NewRsaEncrypter returns a RsaEncrypter with the given key.
-func NewRsaEncrypt(key []byte) (RsaEncrypter, error) {
+func NewRsaEncrypter(key []byte) (RsaEncrypter, error) {
 	block, _ := pem.Decode(key)
 	if block == nil {
-		return nil, ErrPublicKey
+		return nil, ErrPubKey
 	}
 
 	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
@@ -124,7 +130,7 @@ func NewRsaEncrypt(key []byte) (RsaEncrypter, error) {
 				// positive since the length k of the modulus is at least 12 octets.
 				bytesLimit: (pubKey.N.BitLen() >> 3) - 11,
 			},
-			publicKey: pubKey,
+			pubKey: pubKey,
 		}, nil
 	default:
 		return nil, ErrNotRsaKey
@@ -133,13 +139,13 @@ func NewRsaEncrypt(key []byte) (RsaEncrypter, error) {
 
 func (r *rsaEncrypter) Encrypt(input []byte) ([]byte, error) {
 	return r.crypt(input, func(block []byte) ([]byte, error) {
-		return rsaEncryptBlock(r.publicKey, block)
+		return rsaEncryptBlock(r.pubKey, block)
 	})
 }
 
 func (r *rsaEncrypter) EncryptBase64(input []byte) (string, error) {
 	encryptedData, err := r.crypt(input, func(block []byte) ([]byte, error) {
-		return rsaEncryptBlock(r.publicKey, block)
+		return rsaEncryptBlock(r.pubKey, block)
 	})
 
 	return base64.StdEncoding.EncodeToString(encryptedData), err
@@ -168,10 +174,10 @@ func (r *rsaBase) crypt(input []byte, cryptFn func([]byte) ([]byte, error)) ([]b
 	return result, nil
 }
 
-func rsaDecryptBlock(privateKey *rsa.PrivateKey, block []byte) ([]byte, error) {
-	return rsa.DecryptPKCS1v15(rand.Reader, privateKey, block)
+func rsaDecryptBlock(privKey *rsa.PrivateKey, block []byte) ([]byte, error) {
+	return rsa.DecryptPKCS1v15(rand.Reader, privKey, block)
 }
 
-func rsaEncryptBlock(publicKey *rsa.PublicKey, msg []byte) ([]byte, error) {
-	return rsa.EncryptPKCS1v15(rand.Reader, publicKey, msg)
+func rsaEncryptBlock(pubKey *rsa.PublicKey, msg []byte) ([]byte, error) {
+	return rsa.EncryptPKCS1v15(rand.Reader, pubKey, msg)
 }

@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-16 16:21:11
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-16 17:04:57
+ * @LastEditTime: 2021-12-16 17:11:05
  * @Description:
  */
 package codec
@@ -54,12 +54,12 @@ ZQIDAQAB
 )
 
 func TestCryption(t *testing.T) {
-	enc, err := NewRsaEncrypt([]byte(pubKey))
+	enc, err := NewRsaEncrypter([]byte(pubKey))
 	assert.Nil(t, err)
 	ret, err := enc.Encrypt([]byte(testBody))
 	assert.Nil(t, err)
 
-	dec, err := NewRsaDecrypt([]byte(priKey))
+	dec, err := NewRsaDecrypter([]byte(priKey))
 	assert.Nil(t, err)
 	actual, err := dec.Decrypt(ret)
 	assert.Nil(t, err)
@@ -67,12 +67,12 @@ func TestCryption(t *testing.T) {
 }
 
 func TestCryptionBase(t *testing.T) {
-	enc, err := NewRsaEncrypt([]byte(pubKey))
+	enc, err := NewRsaEncrypter([]byte(pubKey))
 	assert.Nil(t, err)
 	ret, err := enc.EncryptBase64([]byte(testBody))
 	assert.Nil(t, err)
 
-	dec, err := NewRsaDecrypt([]byte(priKey))
+	dec, err := NewRsaDecrypter([]byte(priKey))
 	assert.Nil(t, err)
 	actual, err := dec.DecryptBase64(string(ret))
 	assert.Nil(t, err)
@@ -80,6 +80,6 @@ func TestCryptionBase(t *testing.T) {
 }
 
 func TestBadPubKey(t *testing.T) {
-	_, err := NewRsaEncrypt([]byte("foo"))
-	assert.Equal(t, ErrPublicKey, err)
+	_, err := NewRsaEncrypter([]byte("foo"))
+	assert.Equal(t, ErrPubKey, err)
 }
