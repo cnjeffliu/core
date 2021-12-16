@@ -2,10 +2,10 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-07-19 11:58:51
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-06 17:57:00
+ * @LastEditTime: 2021-12-16 16:23:01
  * @Description:
  */
-package file
+package filex
 
 import (
 	"bufio"
