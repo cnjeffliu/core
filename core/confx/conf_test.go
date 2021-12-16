@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-15 16:21:51
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-15 18:20:11
+ * @LastEditTime: 2021-12-16 18:00:11
  * @Description:
  */
 
@@ -27,13 +27,13 @@ type EnvGroup struct {
 }
 
 type Config struct {
-	Root   string
-	Groups map[string]EnvGroup
+	Root_str string
+	Groups   map[string]EnvGroup
 	Env
 }
 
 const toml = `
-root="root_string"
+root_str="root_string"
 
 [group]
 key = "driver11"
@@ -66,7 +66,7 @@ func TestTomlFile(t *testing.T) {
 	file.Write([]byte(toml))
 
 	var cfg Config
-	Init(&cfg, WithName(fileprefix), WithPath(filepath.Base(file.Name())))
+	Parse(&cfg, WithName(fileprefix), WithPath(filepath.Base(file.Name())))
 
 	fmt.Printf("%v", cfg)
 
@@ -83,7 +83,7 @@ func TestTomlFile(t *testing.T) {
 
 func TestTomlBytes(t *testing.T) {
 	var cfg Config
-	InitStr([]byte(toml), &cfg)
+	ParseStr([]byte(toml), &cfg)
 
 	fmt.Printf("%#v", cfg)
 	/*

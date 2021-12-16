@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-15 16:01:51
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-15 18:00:00
+ * @LastEditTime: 2021-12-16 18:05:49
  * @Description: viper解析配置文件
  */
 package confx
@@ -43,8 +43,8 @@ func WithPath(path string) ConfOption {
 	}
 }
 
-// Init support type:JSON, TOML, YAML, INI
-func Init(object interface{}, opts ...ConfOption) {
+// Parse support type:JSON, TOML, YAML, INI
+func Parse(object interface{}, opts ...ConfOption) {
 	cfg := params{
 		name: "config",
 		typo: "toml",
@@ -67,7 +67,8 @@ func Init(object interface{}, opts ...ConfOption) {
 	}
 }
 
-func InitStr(content []byte, object interface{}, opts ...ConfOption) {
+// ParseStr support type:JSON, TOML, YAML, INI
+func ParseStr(content []byte, object interface{}, opts ...ConfOption) {
 	cfg := params{
 		typo: "toml",
 	}
