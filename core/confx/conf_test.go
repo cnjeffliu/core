@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-15 16:21:51
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-16 18:00:11
+ * @LastEditTime: 2021-12-17 14:33:12
  * @Description:
  */
 
@@ -29,15 +29,16 @@ type EnvGroup struct {
 type Config struct {
 	Root_str string
 	Groups   map[string]EnvGroup
-	Env
+	Group    Env
 }
 
 const toml = `
 root_str="root_string"
 
 [group]
+# 测试注释1
 key = "driver11"
-value = 1000
+value = 1000 # 测试注释2
 
 [groups.grp1]
 [groups.grp1.dev]
