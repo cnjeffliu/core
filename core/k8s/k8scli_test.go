@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-07-19 11:58:51
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-15 15:33:30
+ * @LastEditTime: 2022-01-21 16:38:40
  * @Description:
  */
 package k8s
@@ -101,4 +101,10 @@ func TestExistedPod(t *testing.T) {
 	} else {
 		fmt.Println("not found pod")
 	}
+}
+
+func TestWatchPod(t *testing.T) {
+	InitK8s(WithKubeConfigPatterm("./cluster*"))
+
+	select {}
 }

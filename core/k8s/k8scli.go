@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-06 14:45:26
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-11 19:11:00
+ * @LastEditTime: 2022-01-21 16:39:51
  * @Description: k8s操作处理类
  */
 package k8s
@@ -75,8 +75,8 @@ func NewK8SCli(kubeconfigPath string, opts ...K8SCliOption) *K8SCli {
 	client.clientset = set
 	stopper := make(chan struct{})
 	factory := informers.NewSharedInformerFactory(set, 0)
-	podInformer := factory.Core().V1().Pods().Informer()
 	nodeInformer := factory.Core().V1().Nodes().Informer()
+	podInformer := factory.Core().V1().Pods().Informer()
 
 	go factory.Start(stopper)
 
@@ -92,6 +92,23 @@ func NewK8SCli(kubeconfigPath string, opts ...K8SCliOption) *K8SCli {
 		DeleteFunc: func(obj interface{}) {
 			node := obj.(*corev1.Node)
 			fmt.Println("delete not implemented", node.Name)
+		},
+	})
+
+	podInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc: func(obj interface{}) {
+			pod := obj.(*corev1.Pod)
+			fmt.Printf("New Pod Added : %v\n", pod.Name)
+
+		},
+		UpdateFunc: func(oldObj, newObj interface{}) {
+			oldPod := oldObj.(*corev1.Pod)
+			newPod := newObj.(*corev1.Pod)
+			fmt.Printf("Pod Updated : %v => %v\n", oldPod.Name, newPod.Name)
+		},
+		DeleteFunc: func(obj interface{}) {
+			pod := obj.(*corev1.Pod)
+			fmt.Printf("Pod Deleted : %v\n", pod.Name)
 		},
 	})
 	client.podLister = factory.Core().V1().Pods().Lister()
