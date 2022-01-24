@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-06 14:45:26
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2022-01-21 16:39:51
+ * @LastEditTime: 2022-01-24 09:54:48
  * @Description: k8s操作处理类
  */
 package k8s
@@ -15,6 +15,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/watch"
 
 	k8srun "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/informers"
@@ -95,22 +96,22 @@ func NewK8SCli(kubeconfigPath string, opts ...K8SCliOption) *K8SCli {
 		},
 	})
 
-	podInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-			pod := obj.(*corev1.Pod)
-			fmt.Printf("New Pod Added : %v\n", pod.Name)
+	// podInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+	// 	AddFunc: func(obj interface{}) {
+	// 		pod := obj.(*corev1.Pod)
+	// 		fmt.Printf("New Pod Added : %#v\n", pod.Name)
 
-		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			oldPod := oldObj.(*corev1.Pod)
-			newPod := newObj.(*corev1.Pod)
-			fmt.Printf("Pod Updated : %v => %v\n", oldPod.Name, newPod.Name)
-		},
-		DeleteFunc: func(obj interface{}) {
-			pod := obj.(*corev1.Pod)
-			fmt.Printf("Pod Deleted : %v\n", pod.Name)
-		},
-	})
+	// 	},
+	// 	UpdateFunc: func(oldObj, newObj interface{}) {
+	// 		oldPod := oldObj.(*corev1.Pod)
+	// 		newPod := newObj.(*corev1.Pod)
+	// 		fmt.Printf("Pod Updated : %v => %v\n", oldPod.Name, newPod.Name)
+	// 	},
+	// 	DeleteFunc: func(obj interface{}) {
+	// 		pod := obj.(*corev1.Pod)
+	// 		fmt.Printf("Pod Deleted : %v\n", pod.Name)
+	// 	},
+	// })
 	client.podLister = factory.Core().V1().Pods().Lister()
 	return client
 }
@@ -172,6 +173,17 @@ func GetObjTypeMeta(podname string) metav1.ObjectMeta {
 	return metav1.ObjectMeta{Name: podname,
 		Namespace: corev1.NamespaceDefault,
 		Labels:    map[string]string{"name": podname}}
+}
+
+func (c *K8SCli) WatchPod(label string, opts ...K8SCliOption) (watch.Interface, error) {
+	var namespace string = corev1.NamespaceDefault
+	for _, opt := range opts {
+		namespace = opt()
+	}
+
+	return c.clientset.CoreV1().Pods(namespace).Watch(context.Background(), metav1.ListOptions{
+		LabelSelector: label,
+	})
 }
 
 func (c *K8SCli) CreatePod(pod *corev1.Pod, opts ...K8SCliOption) (*corev1.Pod, error) {

@@ -2,18 +2,21 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-07-19 11:58:51
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2022-01-21 16:38:40
+ * @LastEditTime: 2022-01-24 09:53:11
  * @Description:
  */
 package k8s
 
 import (
 	"fmt"
+	"log"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	v1 "k8s.io/api/core/v1"
 )
 
 const k8sConfNameLen = 4
@@ -105,6 +108,41 @@ func TestExistedPod(t *testing.T) {
 
 func TestWatchPod(t *testing.T) {
 	InitK8s(WithKubeConfigPatterm("./cluster*"))
+
+	select {}
+}
+
+func TestWatchResult(t *testing.T) {
+	client := NewK8SCli("./cluster_1_114_2/config")
+	label := ""
+
+	// status, pod, _ := client.GetPod("mobile-386")
+	// if status != STATUS_RUNNING {
+	// 	fmt.Println("found pod")
+	// 	return
+	// }
+
+	// for k := range pod.GetLabels() {
+	// 	label = k
+	// 	break
+	// }
+
+	watch, err := client.WatchPod(label)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	go func() {
+		for event := range watch.ResultChan() {
+			fmt.Printf("Type:%v ", event.Type)
+			p, ok := event.Object.(*v1.Pod)
+			if !ok {
+				log.Fatal("unexpected type")
+			}
+			fmt.Printf("%v ", p.Name)
+			fmt.Println(p.Status.Phase)
+			// fmt.Println(p.Status.ContainerStatuses)
+		}
+	}()
 
 	select {}
 }
