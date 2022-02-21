@@ -2,7 +2,7 @@
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-07-19 11:58:51
  * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2022-01-24 09:53:11
+ * @LastEditTime: 2022-01-24 10:16:52
  * @Description:
  */
 package k8s
@@ -116,16 +116,16 @@ func TestWatchResult(t *testing.T) {
 	client := NewK8SCli("./cluster_1_114_2/config")
 	label := ""
 
-	// status, pod, _ := client.GetPod("mobile-386")
-	// if status != STATUS_RUNNING {
-	// 	fmt.Println("found pod")
-	// 	return
-	// }
+	status, pod, _ := client.GetPod("name=mobile-386")
+	if status != STATUS_RUNNING {
+		fmt.Println("found pod")
+		return
+	}
 
-	// for k := range pod.GetLabels() {
-	// 	label = k
-	// 	break
-	// }
+	for k := range pod.GetLabels() {
+		label = k
+		break
+	}
 
 	watch, err := client.WatchPod(label)
 	if err != nil {
