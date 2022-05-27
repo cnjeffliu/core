@@ -1,3 +1,10 @@
+/*
+ * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Date: 2021-07-23 09:34:32
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-05-27 17:38:44
+ * @Description:
+ */
 package sqlx
 
 import (
@@ -31,7 +38,6 @@ func NewMysqlConn() (*Dblib, error) {
 		WithConnMaxLifetime(100*time.Second))
 	if nil != err {
 		panic(err.Error())
-		return nil, err
 	}
 
 	p := new(Dblib)

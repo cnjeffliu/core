@@ -1,7 +1,10 @@
 /*
-* 数据库连接工具类
-* Jeff.Liu <zhifeng172@163.com> 2021.06.15
-**/
+ * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Date: 2021-06-15 11:58:51
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-05-27 17:37:35
+ * @Description: 数据库连接工具类
+ */
 package sqlx
 
 import (
