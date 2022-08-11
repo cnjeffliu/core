@@ -1,8 +1,8 @@
 /*
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-06 14:45:26
- * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2022-01-24 09:54:48
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-08-17 14:58:54
  * @Description: k8s操作处理类
  */
 package k8s
@@ -136,15 +136,8 @@ func (c *K8SCli) ListPods(opts ...K8SCliOption) []corev1.Pod {
 	return podList.Items
 }
 
-func (c *K8SCli) GetPod(name string, opts ...K8SCliOption) (STATUS, *v1.Pod, error) {
-	var namespace string = corev1.NamespaceDefault
-	for _, opt := range opts {
-		namespace = opt()
-	}
-
-	pod, err := c.podLister.Pods(namespace).Get(name)
+func checkError(pod *v1.Pod, err error) (STATUS, *v1.Pod, error) {
 	if errors.IsNotFound(err) {
-		fmt.Println("Error not found pod")
 		return STATUS_NOT_FOUND, nil, err
 	}
 
@@ -163,6 +156,24 @@ func (c *K8SCli) GetPod(name string, opts ...K8SCliOption) (STATUS, *v1.Pod, err
 	}
 
 	return STATUS_ERROR, nil, err
+}
+
+func (c *K8SCli) GetPod(name string, opts ...K8SCliOption) (STATUS, *v1.Pod, error) {
+	var namespace string = corev1.NamespaceDefault
+	for _, opt := range opts {
+		namespace = opt()
+	}
+
+	return checkError(c.podLister.Pods(namespace).Get(name))
+}
+
+func (c *K8SCli) GetPodRT(name string, opts ...K8SCliOption) (STATUS, *v1.Pod, error) {
+	var namespace string = corev1.NamespaceDefault
+	for _, opt := range opts {
+		namespace = opt()
+	}
+
+	return checkError(c.clientset.CoreV1().Pods(namespace).Get(context.Background(), name, metav1.GetOptions{}))
 }
 
 func GetPodTypeMeta() metav1.TypeMeta {

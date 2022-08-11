@@ -1,19 +1,21 @@
 /*
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-12-15 14:18:20
- * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-15 15:18:30
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-08-10 17:21:05
  * @Description:
  */
 package netx
 
 import (
+	"io/ioutil"
 	"net"
+	"net/http"
 	"strconv"
 	"strings"
 )
 
-func InternalIp() string {
+func ServerIP() string {
 	infs, err := net.Interfaces()
 	if err != nil {
 		return ""
@@ -39,6 +41,16 @@ func InternalIp() string {
 	}
 
 	return ""
+}
+
+func PublicIP() string {
+	resp, err := http.Get("http://ident.me")
+	if err != nil {
+		return ""
+	}
+	defer resp.Body.Close()
+	content, _ := ioutil.ReadAll(resp.Body)
+	return string(content)
 }
 
 func isEthDown(f net.Flags) bool {

@@ -1,3 +1,10 @@
+/*
+ * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Date: 2022-08-10 17:17:32
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-08-10 17:39:02
+ * @Description:
+ */
 package execx
 
 import (
@@ -11,7 +18,7 @@ import (
 
 type CMDOption func(*exec.Cmd)
 
-func WithDir(d string) CMDOption {
+func WithWorkDir(d string) CMDOption {
 	return func(c *exec.Cmd) {
 		c.Dir = d
 	}

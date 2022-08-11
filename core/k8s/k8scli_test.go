@@ -1,8 +1,8 @@
 /*
  * @Author: Jeffrey.Liu <zhifeng172@163.com>
  * @Date: 2021-07-19 11:58:51
- * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2022-01-24 10:16:52
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-08-17 14:55:02
  * @Description:
  */
 package k8s
@@ -10,6 +10,7 @@ package k8s
 import (
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -82,15 +83,40 @@ func TestListPods(t *testing.T) {
 	}
 }
 
+// go test -v core/k8s/*.go -run TestGetPod -args mobile-542864
 func TestGetPod(t *testing.T) {
 	InitK8s(WithKubeConfigPatterm("./cluster*"))
 
-	_, pod, _ := ClientSet[1].GetPod("mobile-89023")
-	if pod != nil {
-		fmt.Println(pod.Name, pod.Labels, pod.Status.HostIP, pod.Status.PodIP, pod.Status.Phase)
-	} else {
-		fmt.Println("not found pod")
+	mid := "mobile-678"
+	s := os.Args[len(os.Args)-1]
+	if len(s) > 0 {
+		mid = s
 	}
+
+	cnt := 100
+	for cnt > 0 {
+
+		fmt.Println("name:", mid)
+		fmt.Println("\n********* GetPod *********")
+		status, pod, err := ClientSet[1].GetPod(mid)
+		if err == nil {
+			fmt.Println(status, pod.Name, pod.Status.Phase, pod.Status.Reason, err)
+		} else {
+			fmt.Printf("status:%v err:%v\n", status, err)
+		}
+
+		fmt.Println("\n********* GetPodRT *********")
+		status, pod, err = ClientSet[1].GetPodRT(mid)
+		if err == nil {
+			fmt.Println(status, pod.Name, pod.Status.Phase, pod.Status.Reason, err)
+		} else {
+			fmt.Printf("status:%v err:%v\n\n", status, err)
+		}
+
+		cnt -= 1
+		time.Sleep(time.Second)
+	}
+
 }
 
 func TestExistedPod(t *testing.T) {
