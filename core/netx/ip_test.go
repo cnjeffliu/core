@@ -1,3 +1,10 @@
+/*
+ * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Date: 2022-08-10 17:17:32
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-08-10 17:19:26
+ * @Description:
+ */
 package netx
 
 import (
@@ -17,4 +24,12 @@ func TestIP2UInt32(t *testing.T) {
 	fmt.Println(IP2.String())
 
 	t.Log(net.SplitHostPort("10.0.2.113:9090"))
+}
+
+func TestServerIP(t *testing.T) {
+	t.Log(ServerIP())
+}
+
+func TestPublicIP(t *testing.T) {
+	t.Log(PublicIP())
 }
