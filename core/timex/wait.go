@@ -1,9 +1,17 @@
+/*
+ * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Date: 2022-08-26 11:42:04
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-08-27 16:06:04
+ * @Description:
+ */
 package timex
 
 import (
 	"math/rand"
-	"serv/core/clock"
 	"time"
+
+	"serv/core/clock"
 )
 
 func Jitter(duration time.Duration, maxFactor float64) time.Duration {
@@ -54,6 +62,14 @@ func (j *jitteredBackoffManagerImpl) Backoff() clock.Timer {
 		j.timer.Reset(backoff)
 	}
 	return j.timer
+}
+
+func Until(f func(), period time.Duration, stopCh <-chan struct{}) {
+	JitterUntil(f, period, 0.0, true, stopCh)
+}
+
+func JitterUntil(f func(), period time.Duration, jitterFactor float64, sliding bool, stopCh <-chan struct{}) {
+	BackoffUntil(f, NewJitteredBackoffManager(period, jitterFactor, &clock.RealClock{}), sliding, stopCh)
 }
 
 func BackoffUntil(f func(), backoff BackoffManager, sliding bool, stopCh <-chan struct{}) {
