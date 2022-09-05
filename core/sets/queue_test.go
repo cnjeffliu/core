@@ -2,13 +2,13 @@
  * @Author: Jeffrey Liu <zhifeng172@163.com>
  * @Date: 2022-07-20 14:06:24
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-07-20 14:57:57
+ * @LastEditTime: 2022-09-05 14:28:37
  * @Description:
  */
-package collection_test
+package sets_test
 
 import (
-	"serv/core/collection"
+	"serv/core/sets"
 	"sync"
 	"testing"
 	"time"
@@ -16,10 +16,10 @@ import (
 
 func TestBasic(t *testing.T) {
 	tests := []struct {
-		queue *collection.Queue
+		queue *sets.Queue
 	}{
 		{
-			queue: collection.NewQueue(),
+			queue: sets.NewQueue(),
 		},
 	}
 	for _, test := range tests {
@@ -73,10 +73,10 @@ func TestBasic(t *testing.T) {
 
 func TestAddWhileProcessing(t *testing.T) {
 	tests := []struct {
-		queue *collection.Queue
+		queue *sets.Queue
 	}{
 		{
-			queue: collection.NewQueue(),
+			queue: sets.NewQueue(),
 		},
 	}
 	for _, test := range tests {
@@ -125,7 +125,7 @@ func TestAddWhileProcessing(t *testing.T) {
 }
 
 func TestLen(t *testing.T) {
-	q := collection.NewQueue()
+	q := sets.NewQueue()
 	q.Add("foo")
 	if e, a := 1, q.Len(); e != a {
 		t.Errorf("Expected %v, got %v", e, a)
@@ -141,7 +141,7 @@ func TestLen(t *testing.T) {
 }
 
 func TestReinsert(t *testing.T) {
-	q := collection.NewQueue()
+	q := sets.NewQueue()
 	q.Add("foo")
 
 	// Start processing
@@ -172,7 +172,7 @@ func TestReinsert(t *testing.T) {
 
 func TestQueueDrainageUsingShutDownWithDrain(t *testing.T) {
 
-	q := collection.NewQueue()
+	q := sets.NewQueue()
 
 	q.Add("foo")
 	q.Add("bar")
@@ -204,7 +204,7 @@ func TestQueueDrainageUsingShutDownWithDrain(t *testing.T) {
 
 func TestNoQueueDrainageUsingShutDown(t *testing.T) {
 
-	q := collection.NewQueue()
+	q := sets.NewQueue()
 
 	q.Add("foo")
 	q.Add("bar")
@@ -227,7 +227,7 @@ func TestNoQueueDrainageUsingShutDown(t *testing.T) {
 
 func TestForceQueueShutdownUsingShutDown(t *testing.T) {
 
-	q := collection.NewQueue()
+	q := sets.NewQueue()
 
 	q.Add("foo")
 	q.Add("bar")
@@ -259,7 +259,7 @@ func TestForceQueueShutdownUsingShutDown(t *testing.T) {
 }
 
 func TestQueueDrainageUsingShutDownWithDrainWithDirtyItem(t *testing.T) {
-	q := collection.NewQueue()
+	q := sets.NewQueue()
 
 	q.Add("foo")
 	gotten, _ := q.Get()
