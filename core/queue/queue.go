@@ -2,13 +2,14 @@
  * @Author: Jeffrey Liu <zhifeng172@163.com>
  * @Date: 2022-07-20 13:56:02
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-05 14:30:18
+ * @LastEditTime: 2022-09-08 09:42:44
  * @Description:
  */
 
-package sets
+package queue
 
 import (
+	"serv/core/sets"
 	"serv/core/typex"
 	"sync"
 	"sync/atomic"
@@ -16,8 +17,8 @@ import (
 
 func NewQueue() *Queue {
 	t := &Queue{
-		dirty:      Set{},
-		processing: Set{},
+		dirty:      sets.Set{},
+		processing: sets.Set{},
 		cond:       sync.NewCond(&sync.Mutex{}),
 	}
 
@@ -27,8 +28,8 @@ func NewQueue() *Queue {
 type Queue struct {
 	queue      []typex.T
 	queueLen   int32
-	dirty      Set
-	processing Set
+	dirty      sets.Set
+	processing sets.Set
 	processLen int32
 
 	cond *sync.Cond
