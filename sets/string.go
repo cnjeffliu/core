@@ -10,8 +10,9 @@ package sets
 
 import (
 	"reflect"
-	"gitee.com/cnjeffliu/core/typex"
 	"sort"
+
+	"github.com/cnjeffliu/core/typex"
 )
 
 // sets.String is a set of strings, implemented via map[string]struct{} for minimal memory consumption.

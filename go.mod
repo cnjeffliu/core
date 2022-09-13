@@ -1,4 +1,4 @@
-module gitee.com/cnjeffliu/core
+module github.com/cnjeffliu/core
 
 go 1.16
 

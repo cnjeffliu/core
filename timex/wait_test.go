@@ -9,10 +9,11 @@ package timex_test
 
 import (
 	"fmt"
-	"gitee.com/cnjeffliu/core/clock"
-	"gitee.com/cnjeffliu/core/timex"
 	"testing"
 	"time"
+
+	"github.com/cnjeffliu/core/clock"
+	"github.com/cnjeffliu/core/timex"
 )
 
 func TestJitterdBackoff(t *testing.T) {

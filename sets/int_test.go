@@ -9,8 +9,9 @@ package sets_test
 
 import (
 	"fmt"
-	"gitee.com/cnjeffliu/core/sets"
 	"testing"
+
+	"github.com/cnjeffliu/core/sets"
 )
 
 func TestIntSet(t *testing.T) {

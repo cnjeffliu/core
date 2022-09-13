@@ -5,8 +5,9 @@
 package limit
 
 import (
-	"gitee.com/cnjeffliu/core/timex"
 	"sync"
+
+	"github.com/cnjeffliu/core/timex"
 )
 
 type WindowLimit struct {

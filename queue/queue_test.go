@@ -8,10 +8,11 @@
 package queue_test
 
 import (
-	"gitee.com/cnjeffliu/core/queue"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/cnjeffliu/core/queue"
 )
 
 func TestBasic(t *testing.T) {

@@ -9,8 +9,9 @@ package sets
 
 import (
 	"reflect"
-	"gitee.com/cnjeffliu/core/typex"
 	"sort"
+
+	"github.com/cnjeffliu/core/typex"
 )
 
 // sets.Uint64 is a set of int64s, implemented via map[uint64]struct{} for minimal memory consumption.

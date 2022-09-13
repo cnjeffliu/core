@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"gitee.com/cnjeffliu/core/filex"
+	"github.com/cnjeffliu/core/filex"
 )
 
 func GetBtime() int64 {

@@ -8,8 +8,9 @@
 package httpx_test
 
 import (
-	"gitee.com/cnjeffliu/core/httpx"
 	"testing"
+
+	"github.com/cnjeffliu/core/httpx"
 )
 
 func TestGet(t *testing.T) {

@@ -9,10 +9,11 @@
 package queue
 
 import (
-	"gitee.com/cnjeffliu/core/sets"
-	"gitee.com/cnjeffliu/core/typex"
 	"sync"
 	"sync/atomic"
+
+	"github.com/cnjeffliu/core/sets"
+	"github.com/cnjeffliu/core/typex"
 )
 
 func NewQueue() *Queue {

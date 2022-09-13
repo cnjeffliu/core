@@ -9,7 +9,8 @@ package thread
 
 import (
 	"fmt"
-	"gitee.com/cnjeffliu/core/logx"
+
+	"github.com/cnjeffliu/core/logx"
 )
 
 func Recover(cleanups ...func()) {

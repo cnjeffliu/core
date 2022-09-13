@@ -8,8 +8,9 @@
 package message_test
 
 import (
-	"gitee.com/cnjeffliu/core/message"
 	"testing"
+
+	"github.com/cnjeffliu/core/message"
 )
 
 func TestSendEmailTLS(t *testing.T) {

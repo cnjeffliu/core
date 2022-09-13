@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"testing"
 
-	"gitee.com/cnjeffliu/core/host"
-	"gitee.com/cnjeffliu/core/timex"
+	"github.com/cnjeffliu/core/host"
+	"github.com/cnjeffliu/core/timex"
 )
 
 func TestBTime(t *testing.T) {

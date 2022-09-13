@@ -9,8 +9,9 @@ package sets
 
 import (
 	"reflect"
-	"gitee.com/cnjeffliu/core/typex"
 	"sort"
+
+	"github.com/cnjeffliu/core/typex"
 )
 
 // sets.Int is a set of ints, implemented via map[int]struct{} for minimal memory consumption.

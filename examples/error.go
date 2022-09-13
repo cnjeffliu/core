@@ -9,7 +9,8 @@ package demo
 
 import (
 	"fmt"
-	"gitee.com/cnjeffliu/core/errorx"
+
+	"github.com/cnjeffliu/core/errorx"
 )
 
 type ErrMsg struct {
