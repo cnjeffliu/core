@@ -1,4 +1,4 @@
-module gitee.com/cnjeffliu
+module gitee.com/cnjeffliu/core
 
 go 1.16
 
