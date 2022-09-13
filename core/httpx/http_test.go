@@ -8,7 +8,7 @@
 package httpx_test
 
 import (
-	"serv/core/httpx"
+	"gitee.com/cnjeffliu/core/httpx"
 	"testing"
 )
 

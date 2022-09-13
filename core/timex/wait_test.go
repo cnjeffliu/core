@@ -9,8 +9,8 @@ package timex_test
 
 import (
 	"fmt"
-	"serv/core/clock"
-	"serv/core/timex"
+	"gitee.com/cnjeffliu/core/clock"
+	"gitee.com/cnjeffliu/core/timex"
 	"testing"
 	"time"
 )

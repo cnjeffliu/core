@@ -5,7 +5,7 @@
 package limit
 
 import (
-	"serv/core/timex"
+	"gitee.com/cnjeffliu/core/timex"
 	"sync"
 )
 

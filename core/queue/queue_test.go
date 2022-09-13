@@ -8,7 +8,7 @@
 package queue_test
 
 import (
-	"serv/core/queue"
+	"gitee.com/cnjeffliu/core/queue"
 	"sync"
 	"testing"
 	"time"

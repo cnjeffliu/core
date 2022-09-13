@@ -11,7 +11,7 @@ import (
 	"math/rand"
 	"time"
 
-	"serv/core/clock"
+	"gitee.com/cnjeffliu/core/clock"
 )
 
 func Jitter(duration time.Duration, maxFactor float64) time.Duration {

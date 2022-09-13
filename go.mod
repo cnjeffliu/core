@@ -1,4 +1,4 @@
-module serv
+module gitee.com/cnjeffliu
 
 go 1.16
 

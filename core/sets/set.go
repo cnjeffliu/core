@@ -7,7 +7,7 @@
  */
 package sets
 
-import "serv/core/typex"
+import "gitee.com/cnjeffliu/core/typex"
 
 type Set map[typex.T]typex.Empty
 

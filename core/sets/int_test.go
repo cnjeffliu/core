@@ -9,7 +9,7 @@ package sets_test
 
 import (
 	"fmt"
-	"serv/core/sets"
+	"gitee.com/cnjeffliu/core/sets"
 	"testing"
 )
 

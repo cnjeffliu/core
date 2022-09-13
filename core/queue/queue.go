@@ -9,8 +9,8 @@
 package queue
 
 import (
-	"serv/core/sets"
-	"serv/core/typex"
+	"gitee.com/cnjeffliu/core/sets"
+	"gitee.com/cnjeffliu/core/typex"
 	"sync"
 	"sync/atomic"
 )

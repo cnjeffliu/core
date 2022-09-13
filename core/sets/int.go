@@ -9,7 +9,7 @@ package sets
 
 import (
 	"reflect"
-	"serv/core/typex"
+	"gitee.com/cnjeffliu/core/typex"
 	"sort"
 )
 

@@ -10,7 +10,7 @@ package message
 
 import (
 	"fmt"
-	"serv/core/httpx"
+	"gitee.com/cnjeffliu/core/httpx"
 )
 
 type WxWorkClient struct {

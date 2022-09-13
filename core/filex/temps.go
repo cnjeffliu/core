@@ -10,7 +10,7 @@ package filex
 import (
 	"io/ioutil"
 	"os"
-	"serv/core/hash"
+	"gitee.com/cnjeffliu/core/hash"
 )
 
 // TempFileWithText creates the temporary file with the given content,

@@ -9,7 +9,7 @@ package demo
 
 import (
 	"fmt"
-	"serv/core/errorx"
+	"gitee.com/cnjeffliu/core/errorx"
 )
 
 type ErrMsg struct {

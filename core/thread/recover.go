@@ -9,7 +9,7 @@ package thread
 
 import (
 	"fmt"
-	"serv/core/logx"
+	"gitee.com/cnjeffliu/core/logx"
 )
 
 func Recover(cleanups ...func()) {

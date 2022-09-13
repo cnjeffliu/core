@@ -8,7 +8,7 @@
 package message_test
 
 import (
-	"serv/core/message"
+	"gitee.com/cnjeffliu/core/message"
 	"testing"
 )
 
