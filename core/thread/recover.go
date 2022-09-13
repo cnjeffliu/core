@@ -9,7 +9,7 @@ package thread
 
 import (
 	"fmt"
-	"os"
+	"serv/core/logx"
 )
 
 func Recover(cleanups ...func()) {
@@ -18,6 +18,7 @@ func Recover(cleanups ...func()) {
 	}
 
 	if p := recover(); p != nil {
-		os.Stdout.WriteString(fmt.Sprint(p))
+		// os.Stdout.WriteString(fmt.Sprint(p))
+		logx.Error(fmt.Sprint(p))
 	}
 }

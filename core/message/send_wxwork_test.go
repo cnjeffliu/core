@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu <zhifeng172@163.com>
  * @Date: 2021-10-21 15:36:56
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-08 14:45:32
+ * @LastEditTime: 2022-09-13 10:41:04
  * @Description:
  */
 package message_test
@@ -13,9 +13,9 @@ import (
 )
 
 func TestSendWxWrk(t *testing.T) {
-	corpid := "ww412ca4ab5f995a48"                          //企业ID
-	secret := "Fw4-WhdQj9KF_S9nfD1k44qhmGOgJOKb8HRGJeJxQqk" //企业凭证密钥
-	agentId := "1000006"                                    //应用ID
+	corpid := "ww412ca4ab5f99xxxx"                          //企业ID
+	secret := "Fw4-WhdQj9KF_S9nfD1k44qhmGOgJOKb8HRGJeJxxxx" //企业凭证密钥
+	agentId := "1000000"                                    //应用ID
 
 	client := message.NewWxWorkClient(corpid, secret, agentId)
 
