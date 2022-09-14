@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:51:53
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-09 15:58:45
@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/cnjeffliu/core/typex"
+	"github.com/cnjeffliu/gocore/typex"
 )
 
 // sets.Uint64 is a set of int64s, implemented via map[uint64]struct{} for minimal memory consumption.

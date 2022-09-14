@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-09-03 20:24:55
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-05 14:28:59
@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/cnjeffliu/core/typex"
+	"github.com/cnjeffliu/gocore/typex"
 )
 
 // sets.String is a set of strings, implemented via map[string]struct{} for minimal memory consumption.

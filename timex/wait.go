@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-08-26 11:42:04
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-08-27 16:06:04
@@ -11,7 +11,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/cnjeffliu/core/clock"
+	"github.com/cnjeffliu/gocore/clock"
 )
 
 func Jitter(duration time.Duration, maxFactor float64) time.Duration {

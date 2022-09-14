@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:51:53
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-07-20 14:56:44
@@ -7,7 +7,7 @@
  */
 package sets
 
-import "github.com/cnjeffliu/core/typex"
+import "github.com/cnjeffliu/gocore/typex"
 
 type Set map[typex.T]typex.Empty
 

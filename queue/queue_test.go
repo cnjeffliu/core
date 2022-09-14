@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-07-20 14:06:24
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-08 09:43:18
@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cnjeffliu/core/queue"
+	"github.com/cnjeffliu/gocore/queue"
 )
 
 func TestBasic(t *testing.T) {

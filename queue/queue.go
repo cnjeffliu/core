@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:02
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-08 09:42:44
@@ -12,8 +12,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/cnjeffliu/core/sets"
-	"github.com/cnjeffliu/core/typex"
+	"github.com/cnjeffliu/gocore/sets"
+	"github.com/cnjeffliu/gocore/typex"
 )
 
 func NewQueue() *Queue {

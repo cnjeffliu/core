@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-08-26 09:26:55
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-08-26 09:38:55
@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cnjeffliu/core/clock"
-	"github.com/cnjeffliu/core/timex"
+	"github.com/cnjeffliu/gocore/clock"
+	"github.com/cnjeffliu/gocore/timex"
 )
 
 func TestJitterdBackoff(t *testing.T) {

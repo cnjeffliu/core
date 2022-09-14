@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-09-09 14:06:58
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-09 14:11:29
@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cnjeffliu/core/sets"
+	"github.com/cnjeffliu/gocore/sets"
 )
 
 func TestIntSet(t *testing.T) {

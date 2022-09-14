@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-08-10 17:17:32
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-08 10:43:45
@@ -10,7 +10,7 @@ package httpx_test
 import (
 	"testing"
 
-	"github.com/cnjeffliu/core/httpx"
+	"github.com/cnjeffliu/gocore/httpx"
 )
 
 func TestGet(t *testing.T) {

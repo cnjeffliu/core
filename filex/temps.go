@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey.Liu <zhifeng172@163.com>
+ * @Author: Jeffrey.Liu
  * @Date: 2021-12-16 16:22:48
  * @LastEditors: Jeffrey.Liu
  * @LastEditTime: 2021-12-16 16:25:14
@@ -11,7 +11,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/cnjeffliu/core/hash"
+	"github.com/cnjeffliu/gocore/hash"
 )
 
 // TempFileWithText creates the temporary file with the given content,

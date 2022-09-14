@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2021-10-21 15:36:56
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-13 10:41:04
@@ -10,7 +10,7 @@ package message_test
 import (
 	"testing"
 
-	"github.com/cnjeffliu/core/message"
+	"github.com/cnjeffliu/gocore/message"
 )
 
 func TestSendWxWrk(t *testing.T) {

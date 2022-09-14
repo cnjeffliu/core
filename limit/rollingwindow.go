@@ -1,13 +1,13 @@
 /*
 * 滑动窗口限流
-* Jeff.Liu <zhifeng172@163.com> 2021.07.12
+* Jeff.Liu 2021.07.12
 **/
 package limit
 
 import (
 	"sync"
 
-	"github.com/cnjeffliu/core/timex"
+	"github.com/cnjeffliu/gocore/timex"
 )
 
 type WindowLimit struct {
@@ -38,8 +38,8 @@ func WithPeriod(period int64) WindowLimitOption {
 }
 
 /*
- max: limit num in a period
- period: second
+max: limit num in a period
+period: second
 */
 func NewWindowLimit(opts ...WindowLimitOption) *WindowLimit {
 	wl := &WindowLimit{

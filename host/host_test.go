@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-09-13 20:37:28
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-13 20:42:27
@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cnjeffliu/core/host"
-	"github.com/cnjeffliu/core/timex"
+	"github.com/cnjeffliu/gocore/host"
+	"github.com/cnjeffliu/gocore/timex"
 )
 
 func TestBTime(t *testing.T) {

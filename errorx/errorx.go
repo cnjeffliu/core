@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey.Liu <zhifeng172@163.com>
+ * @Author: Jeffrey.Liu
  * @Date: 2021-12-15 14:18:20
  * @LastEditors: Jeffrey.Liu
  * @LastEditTime: 2021-12-15 15:16:38
@@ -180,9 +180,9 @@ func (w *withMessage) Format(s fmt.State, verb rune) {
 // An error value has a cause if it implements the following
 // interface:
 //
-//     type causer interface {
-//            Cause() error
-//     }
+//	type causer interface {
+//	       Cause() error
+//	}
 //
 // If the error does not implement Cause, the original error will
 // be returned. If the error is nil, nil will be returned without further

@@ -1,8 +1,8 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-05-13 10:11:14
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-08 14:16:26
+ * @LastEditTime: 2022-09-14 10:35:38
  * @Description:
  */
 package message_test
@@ -10,12 +10,12 @@ package message_test
 import (
 	"testing"
 
-	"github.com/cnjeffliu/core/message"
+	"github.com/cnjeffliu/gocore/message"
 )
 
 func TestSendEmailTLS(t *testing.T) {
-	to := []string{"zhifeng172@163.com" /* , "zhifeng172@163.com" */}
-	title := "GPU reset"
+	to := []string{"user1@163.com" /* , "user2@163.com" */}
+	title := "this is title"
 	body := `1211905-lmkd -> 10
 	43877-lmkd -> 10
 	43256-lmkd -> 10

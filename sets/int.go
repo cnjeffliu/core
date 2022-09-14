@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:51:53
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-09 13:59:06
@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/cnjeffliu/core/typex"
+	"github.com/cnjeffliu/gocore/typex"
 )
 
 // sets.Int is a set of ints, implemented via map[int]struct{} for minimal memory consumption.

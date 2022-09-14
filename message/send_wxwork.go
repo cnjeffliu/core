@@ -1,5 +1,5 @@
 /*
- * @Author: Jeffrey Liu <zhifeng172@163.com>
+ * @Author: Jeffrey Liu
  * @Date: 2020-10-21 15:36:56
  * @LastEditors: Jeffrey Liu
  * @LastEditTime: 2022-09-08 14:55:29
@@ -11,7 +11,7 @@ package message
 import (
 	"fmt"
 
-	"github.com/cnjeffliu/core/httpx"
+	"github.com/cnjeffliu/gocore/httpx"
 )
 
 type WxWorkClient struct {

@@ -10,7 +10,7 @@ package demo
 import (
 	"fmt"
 
-	"github.com/cnjeffliu/core/errorx"
+	"github.com/cnjeffliu/gocore/errorx"
 )
 
 type ErrMsg struct {
