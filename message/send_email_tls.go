@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2021-10-21 15:36:56
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-08 13:49:41
+ * @LastEditTime: 2022-09-14 18:07:43
  * @Description:
  */
 package message
@@ -15,12 +15,21 @@ import (
 	"net/smtp"
 )
 
-const (
-	HOST   = "smtp.163.com"
-	PORT   = 465
-	FROM   = "motech_cs@163.com"
-	PASSWD = "FAKSLZQCQEHKGCLE"
-)
+type EmailClient struct {
+	server_port int
+	server_host string
+	from_user   string
+	from_passwd string
+}
+
+func NewEmailClient(server_host string, server_port int, from_user, from_passwd string) *EmailClient {
+	return &EmailClient{
+		server_port,
+		server_host,
+		from_user,
+		from_passwd,
+	}
+}
 
 func dial(addr string) (*smtp.Client, error) {
 	conn, err := tls.Dial("tcp", addr, nil)
@@ -83,9 +92,9 @@ func send(addr string, auth smtp.Auth, from string,
 	return c.Quit()
 }
 
-func SendEmailTLS(to []string, title string, body string) {
+func (c *EmailClient) SendEmailTLS(to []string, title string, body string) {
 	header := make(map[string]string)
-	header["From"] = "motech" + "<" + FROM + ">"
+	header["From"] = "motech" + "<" + c.from_user + ">"
 	header["To"] = to[0]
 	header["Subject"] = title
 	// header["Content-Type"] = "text/html;chartset=UTF-8" // 换行符不生效
@@ -98,8 +107,8 @@ func SendEmailTLS(to []string, title string, body string) {
 
 	message += "\r\n" + body
 
-	auth := smtp.PlainAuth("", FROM, PASSWD, HOST)
-	err := send(fmt.Sprintf("%s:%d", HOST, PORT), auth, FROM, to, []byte(message))
+	auth := smtp.PlainAuth("", c.from_user, c.from_passwd, c.server_host)
+	err := send(fmt.Sprintf("%s:%d", c.server_host, c.server_port), auth, c.from_user, to, []byte(message))
 	if err != nil {
 		fmt.Println(err)
 	}
