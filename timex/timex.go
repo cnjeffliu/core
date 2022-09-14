@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu <zhifeng172@163.com>
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-13 20:41:19
+ * @LastEditTime: 2022-09-14 09:45:46
  * @Description:
  */
 package timex
@@ -49,6 +49,12 @@ func TimeToStr(s time.Time) string {
 	return s.Format(TIME_LAYOUT_SECOND)
 }
 
+// output format is 2022-01-01 01:00:00
 func TSToStr(sec int64, nsec int64) string {
 	return time.Unix(sec, nsec).Format(TIME_LAYOUT_SECOND)
+}
+
+// output format is 2022-01-01 01:00:00
+func TSToTime(sec int64, nsec int64) time.Time {
+	return time.Unix(sec, nsec)
 }
