@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-09-13 20:32:00
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-14 10:30:20
+ * @LastEditTime: 2022-09-14 10:36:51
  * @Description:
  */
 package host
@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cnjeffliu/core/filex"
+	"github.com/cnjeffliu/gocore/filex"
 )
 
 func GetBtime() int64 {
