@@ -2,10 +2,10 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:51:53
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-07-20 14:56:44
+ * @LastEditTime: 2022-10-21 23:33:38
  * @Description:
  */
-package sets
+package setx
 
 import "github.com/cnjeffliu/gocore/typex"
 

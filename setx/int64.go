@@ -1,12 +1,11 @@
 /*
  * @Author: Jeffrey Liu
- * @Date: 2022-09-03 20:24:55
+ * @Date: 2022-07-20 13:51:53
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-05 14:28:59
+ * @LastEditTime: 2022-10-21 23:33:32
  * @Description:
  */
-
-package sets
+package setx
 
 import (
 	"reflect"
@@ -15,30 +14,30 @@ import (
 	"github.com/cnjeffliu/gocore/typex"
 )
 
-// sets.String is a set of strings, implemented via map[string]struct{} for minimal memory consumption.
-type String map[string]typex.Empty
+// sets.Int64 is a set of int64s, implemented via map[int64]struct{} for minimal memory consumption.
+type Int64 map[int64]typex.Empty
 
-// NewString creates a String from a list of values.
-func NewString(items ...string) String {
-	ss := String{}
+// NewInt64 creates a Int64 from a list of values.
+func NewInt64(items ...int64) Int64 {
+	ss := Int64{}
 	ss.Insert(items...)
 	return ss
 }
 
-// StringKeySet creates a String from a keys of a map[string](? extends interface{}).
+// Int64KeySet creates a Int64 from a keys of a map[int64](? extends interface{}).
 // If the value passed in is not actually a map, this will panic.
-func StringKeySet(theMap interface{}) String {
+func Int64KeySet(theMap interface{}) Int64 {
 	v := reflect.ValueOf(theMap)
-	ret := String{}
+	ret := Int64{}
 
 	for _, keyValue := range v.MapKeys() {
-		ret.Insert(keyValue.Interface().(string))
+		ret.Insert(keyValue.Interface().(int64))
 	}
 	return ret
 }
 
 // Insert adds items to the set.
-func (s String) Insert(items ...string) String {
+func (s Int64) Insert(items ...int64) Int64 {
 	for _, item := range items {
 		s[item] = typex.Empty{}
 	}
@@ -46,7 +45,7 @@ func (s String) Insert(items ...string) String {
 }
 
 // Delete removes all items from the set.
-func (s String) Delete(items ...string) String {
+func (s Int64) Delete(items ...int64) Int64 {
 	for _, item := range items {
 		delete(s, item)
 	}
@@ -54,13 +53,13 @@ func (s String) Delete(items ...string) String {
 }
 
 // Has returns true if and only if item is contained in the set.
-func (s String) Has(item string) bool {
+func (s Int64) Has(item int64) bool {
 	_, contained := s[item]
 	return contained
 }
 
 // HasAll returns true if and only if all items are contained in the set.
-func (s String) HasAll(items ...string) bool {
+func (s Int64) HasAll(items ...int64) bool {
 	for _, item := range items {
 		if !s.Has(item) {
 			return false
@@ -70,7 +69,7 @@ func (s String) HasAll(items ...string) bool {
 }
 
 // HasAny returns true if any items are contained in the set.
-func (s String) HasAny(items ...string) bool {
+func (s Int64) HasAny(items ...int64) bool {
 	for _, item := range items {
 		if s.Has(item) {
 			return true
@@ -85,8 +84,8 @@ func (s String) HasAny(items ...string) bool {
 // s2 = {a1, a2, a4, a5}
 // s1.Difference(s2) = {a3}
 // s2.Difference(s1) = {a4, a5}
-func (s String) Difference(s2 String) String {
-	result := NewString()
+func (s Int64) Difference(s2 Int64) Int64 {
+	result := NewInt64()
 	for key := range s {
 		if !s2.Has(key) {
 			result.Insert(key)
@@ -101,8 +100,8 @@ func (s String) Difference(s2 String) String {
 // s2 = {a3, a4}
 // s1.Union(s2) = {a1, a2, a3, a4}
 // s2.Union(s1) = {a1, a2, a3, a4}
-func (s1 String) Union(s2 String) String {
-	result := NewString()
+func (s1 Int64) Union(s2 Int64) Int64 {
+	result := NewInt64()
 	for key := range s1 {
 		result.Insert(key)
 	}
@@ -117,9 +116,9 @@ func (s1 String) Union(s2 String) String {
 // s1 = {a1, a2}
 // s2 = {a2, a3}
 // s1.Intersection(s2) = {a2}
-func (s1 String) Intersection(s2 String) String {
-	var walk, other String
-	result := NewString()
+func (s1 Int64) Intersection(s2 Int64) Int64 {
+	var walk, other Int64
+	result := NewInt64()
 	if s1.Len() < s2.Len() {
 		walk = s1
 		other = s2
@@ -136,7 +135,7 @@ func (s1 String) Intersection(s2 String) String {
 }
 
 // IsSuperset returns true if and only if s1 is a superset of s2.
-func (s1 String) IsSuperset(s2 String) bool {
+func (s1 Int64) IsSuperset(s2 Int64) bool {
 	for item := range s2 {
 		if !s1.Has(item) {
 			return false
@@ -148,29 +147,29 @@ func (s1 String) IsSuperset(s2 String) bool {
 // Equal returns true if and only if s1 is equal (as a set) to s2.
 // Two sets are equal if their membership is identical.
 // (In practice, this means same elements, order doesn't matter)
-func (s1 String) Equal(s2 String) bool {
+func (s1 Int64) Equal(s2 Int64) bool {
 	return len(s1) == len(s2) && s1.IsSuperset(s2)
 }
 
-type sortableSliceOfString []string
+type sortableSliceOfInt64 []int64
 
-func (s sortableSliceOfString) Len() int           { return len(s) }
-func (s sortableSliceOfString) Less(i, j int) bool { return lessString(s[i], s[j]) }
-func (s sortableSliceOfString) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s sortableSliceOfInt64) Len() int           { return len(s) }
+func (s sortableSliceOfInt64) Less(i, j int) bool { return lessInt64(s[i], s[j]) }
+func (s sortableSliceOfInt64) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
-// List returns the contents as a sorted string slice.
-func (s String) List() []string {
-	res := make(sortableSliceOfString, 0, len(s))
+// List returns the contents as a sorted int64 slice.
+func (s Int64) List() []int64 {
+	res := make(sortableSliceOfInt64, 0, len(s))
 	for key := range s {
 		res = append(res, key)
 	}
 	sort.Sort(res)
-	return []string(res)
+	return []int64(res)
 }
 
 // UnsortedList returns the slice with contents in random order.
-func (s String) UnsortedList() []string {
-	res := make([]string, 0, len(s))
+func (s Int64) UnsortedList() []int64 {
+	res := make([]int64, 0, len(s))
 	for key := range s {
 		res = append(res, key)
 	}
@@ -178,20 +177,20 @@ func (s String) UnsortedList() []string {
 }
 
 // Returns a single element from the set.
-func (s String) PopAny() (string, bool) {
+func (s Int64) PopAny() (int64, bool) {
 	for key := range s {
 		s.Delete(key)
 		return key, true
 	}
-	var zeroValue string
+	var zeroValue int64
 	return zeroValue, false
 }
 
 // Len returns the size of the set.
-func (s String) Len() int {
+func (s Int64) Len() int {
 	return len(s)
 }
 
-func lessString(lhs, rhs string) bool {
+func lessInt64(lhs, rhs int64) bool {
 	return lhs < rhs
 }

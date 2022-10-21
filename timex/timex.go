@@ -2,13 +2,17 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-14 09:45:46
+ * @LastEditTime: 2022-10-22 00:30:11
  * @Description:
  */
 package timex
 
 import (
+	"fmt"
+	"strconv"
 	"time"
+
+	"github.com/cnjeffliu/gocore/setx"
 )
 
 const (
@@ -57,4 +61,87 @@ func TSToStr(sec int64, nsec int64) string {
 // output format is 2022-01-01 01:00:00
 func TSToTime(sec int64, nsec int64) time.Time {
 	return time.Unix(sec, nsec)
+}
+
+func SubDays(before, last string) int {
+	var day int
+	t1, _ := time.Parse(TIME_LAYOUT_SECOND, before)
+	t2, _ := time.Parse(TIME_LAYOUT_SECOND, last)
+	swap := false
+	if t1.Unix() > t2.Unix() {
+		t1, t2 = t2, t1
+		swap = true
+	}
+
+	t1_ := t1.Add(time.Duration(t2.Sub(t1).Milliseconds()%86400000) * time.Millisecond)
+	day = int(t2.Sub(t1).Hours() / 24)
+	// 计算在t1+两个时间的余数之后天数是否有变化
+	if t1_.Day() != t1.Day() {
+		day += 1
+	}
+
+	if swap {
+		day = -day
+	}
+
+	return day
+}
+
+func subSets(before, last time.Time, useFirst bool, useLast bool, unit string, seps ...string) setx.String {
+	sep := ""
+	if len(seps) > 0 {
+		sep = seps[0]
+	}
+
+	tmp := ""
+	set := setx.NewString()
+	if useFirst {
+		if unit == "y" {
+			tmp = strconv.Itoa(before.Year())
+		} else if unit == "m" {
+			tmp = fmt.Sprintf("%d%s%02d", before.Year(), sep, before.Month())
+		} else if unit == "d" {
+			tmp = fmt.Sprintf("%d%s%02d%s%02d", before.Year(), sep, before.Month(), sep, before.Day())
+		}
+		set.Insert(tmp)
+	}
+
+	cursor := before
+	lastone := ""
+	for cursor.Before(last) {
+		if unit == "y" {
+			cursor = cursor.AddDate(1, 0, 0)
+			tmp = strconv.Itoa(cursor.Year())
+		} else if unit == "m" {
+			cursor = cursor.AddDate(0, 1, 0)
+			tmp = fmt.Sprintf("%d%s%02d", cursor.Year(), sep, cursor.Month())
+		} else if unit == "d" {
+			cursor = cursor.AddDate(0, 0, 1)
+			tmp = fmt.Sprintf("%d%s%02d%s%02d", cursor.Year(), sep, cursor.Month(), sep, cursor.Day())
+		}
+
+		if cursor.Before(last) {
+			set.Insert(tmp)
+			lastone = tmp
+		}
+	}
+
+	if len(lastone) > 0 && !useLast {
+		fmt.Println("delete ", lastone)
+		set.Delete(lastone)
+	}
+
+	return set
+}
+
+func SubYearSets(before, last time.Time, useFirst bool, useLast bool) setx.String {
+	return subSets(before, last, useFirst, useLast, "y")
+}
+
+func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...string) setx.String {
+	return subSets(before, last, useFirst, useLast, "m", seps...)
+}
+
+func SubDaySets(before, last time.Time, useFirst bool, useLast bool, seps ...string) setx.String {
+	return subSets(before, last, useFirst, useLast, "d", seps...)
 }

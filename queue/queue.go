@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:02
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-08 09:42:44
+ * @LastEditTime: 2022-10-21 23:34:09
  * @Description:
  */
 
@@ -12,14 +12,14 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/cnjeffliu/gocore/sets"
+	"github.com/cnjeffliu/gocore/setx"
 	"github.com/cnjeffliu/gocore/typex"
 )
 
 func NewQueue() *Queue {
 	t := &Queue{
-		dirty:      sets.Set{},
-		processing: sets.Set{},
+		dirty:      setx.Set{},
+		processing: setx.Set{},
 		cond:       sync.NewCond(&sync.Mutex{}),
 	}
 
@@ -29,8 +29,8 @@ func NewQueue() *Queue {
 type Queue struct {
 	queue      []typex.T
 	queueLen   int32
-	dirty      sets.Set
-	processing sets.Set
+	dirty      setx.Set
+	processing setx.Set
 	processLen int32
 
 	cond *sync.Cond
