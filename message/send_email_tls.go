@@ -16,10 +16,10 @@ import (
 )
 
 type EmailClient struct {
-	server_port int
 	server_host string
 	from_user   string
 	from_passwd string
+	server_port int
 }
 
 func NewEmailClient(server_host string, server_port int, from_user, from_passwd string) *EmailClient {

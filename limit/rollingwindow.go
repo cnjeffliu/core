@@ -11,10 +11,10 @@ import (
 )
 
 type WindowLimit struct {
-	lock   sync.RWMutex
+	win    []int64
 	limit  uint64
 	period int64
-	win    []int64
+	lock   sync.RWMutex
 }
 
 const (

@@ -28,9 +28,9 @@ type BackoffManager interface {
 
 type jitteredBackoffManagerImpl struct {
 	clock    clock.Clock
+	timer    clock.Timer
 	duration time.Duration
 	jitter   float64
-	timer    clock.Timer
 }
 
 // NewJitteredBackoffManager returns a BackoffManager that backoffs with given duration plus given jitter. If the jitter

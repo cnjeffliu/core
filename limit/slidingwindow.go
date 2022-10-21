@@ -32,13 +32,11 @@ type StopFunc func()
 type NewWindow func() (Window, StopFunc)
 
 type Limiter struct {
+	curr  Window
+	prev  Window
 	size  time.Duration
 	limit int64
-
-	mu sync.Mutex
-
-	curr Window
-	prev Window
+	mu    sync.Mutex
 }
 
 // NewLimiter creates a new limiter, and returns a function to stop

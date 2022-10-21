@@ -20,10 +20,10 @@ import (
 
 type SSHCli struct {
 	cli    *ssh.Client
+	in     chan<- string
+	out    chan<- string
 	user   string
 	passwd string
-	in     chan<- string //mux_shell
-	out    chan<- string // mux_shell
 }
 
 /**

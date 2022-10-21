@@ -41,13 +41,13 @@ type (
 	}
 
 	rsaDecrypter struct {
-		rsaBase
 		privKey *rsa.PrivateKey
+		rsaBase
 	}
 
 	rsaEncrypter struct {
-		rsaBase
 		pubKey *rsa.PublicKey
+		rsaBase
 	}
 )
 

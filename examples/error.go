@@ -14,10 +14,10 @@ import (
 )
 
 type ErrMsg struct {
-	code  int64
+	err   error
 	msg   string
 	msgCN string
-	err   error // 往往存新加入的error
+	code  int64
 }
 
 type ErrLang uint8

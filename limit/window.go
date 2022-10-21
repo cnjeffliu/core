@@ -77,11 +77,10 @@ type Synchronizer interface {
 // Note that for the best coordination between the window and the synchronizer,
 // the synchronization is not automatic but is driven by the call to Sync.
 type SyncWindow struct {
+	syncer Synchronizer
+	key    string
 	LocalWindow
 	changes int64
-
-	key    string
-	syncer Synchronizer
 }
 
 // NewSyncWindow creates an instance of SyncWindow with the given synchronizer.
