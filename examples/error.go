@@ -1,3 +1,10 @@
+/*
+ * @Author: Jeffrey Liu
+ * @Date: 2022-10-21 23:09:31
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-10-21 23:09:32
+ * @Description:
+ */
 /**
  * @Author: Jeffrey.Liu
  * @Date: 2021-11-17 15:37:27
@@ -30,7 +37,12 @@ const (
 var StatusOK = NewErrMsg(200, "success", "成功")
 
 func NewErrMsg(code int64, msg, msgCN string) *ErrMsg {
-	return &ErrMsg{code, msg, msgCN, nil}
+	return &ErrMsg{
+		code:  code,
+		msg:   msg,
+		msgCN: msgCN,
+		err:   nil,
+	}
 }
 
 func (p *ErrMsg) ErrCode() int64 {

@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2021-10-21 15:36:56
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-14 18:07:43
+ * @LastEditTime: 2022-10-21 23:09:01
  * @Description:
  */
 package message
@@ -16,18 +16,18 @@ import (
 )
 
 type EmailClient struct {
-	server_host string
-	from_user   string
-	from_passwd string
-	server_port int
+	server_host   string
+	sender_name   string
+	sender_passwd string
+	server_port   int
 }
 
-func NewEmailClient(server_host string, server_port int, from_user, from_passwd string) *EmailClient {
+func NewEmailClient(server_host string, server_port int, user_name, user_passwd string) *EmailClient {
 	return &EmailClient{
-		server_port,
-		server_host,
-		from_user,
-		from_passwd,
+		server_host:   server_host,
+		server_port:   server_port,
+		sender_name:   user_name,
+		sender_passwd: user_passwd,
 	}
 }
 
@@ -94,7 +94,7 @@ func send(addr string, auth smtp.Auth, from string,
 
 func (c *EmailClient) SendEmailTLS(to []string, title string, body string) {
 	header := make(map[string]string)
-	header["From"] = "motech" + "<" + c.from_user + ">"
+	header["From"] = "motech" + "<" + c.sender_name + ">"
 	header["To"] = to[0]
 	header["Subject"] = title
 	// header["Content-Type"] = "text/html;chartset=UTF-8" // 换行符不生效
@@ -107,8 +107,8 @@ func (c *EmailClient) SendEmailTLS(to []string, title string, body string) {
 
 	message += "\r\n" + body
 
-	auth := smtp.PlainAuth("", c.from_user, c.from_passwd, c.server_host)
-	err := send(fmt.Sprintf("%s:%d", c.server_host, c.server_port), auth, c.from_user, to, []byte(message))
+	auth := smtp.PlainAuth("", c.sender_name, c.sender_passwd, c.server_host)
+	err := send(fmt.Sprintf("%s:%d", c.server_host, c.server_port), auth, c.sender_name, to, []byte(message))
 	if err != nil {
 		fmt.Println(err)
 	}
