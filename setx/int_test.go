@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-09-09 14:06:58
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-21 23:33:22
+ * @LastEditTime: 2022-10-22 18:07:37
  * @Description:
  */
 package setx_test
@@ -11,11 +11,11 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cnjeffliu/gocore/sets"
+	"github.com/cnjeffliu/gocore/setx"
 )
 
 func TestIntSet(t *testing.T) {
-	a := sets.NewInt()
+	a := setx.NewInt()
 	a.Insert(2)
 	a.Insert(3)
 	a.Insert(5)

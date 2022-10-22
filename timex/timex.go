@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-22 00:30:11
+ * @LastEditTime: 2022-10-22 18:03:00
  * @Description:
  */
 package timex
@@ -87,38 +87,19 @@ func SubDays(before, last string) int {
 	return day
 }
 
-func subSets(before, last time.Time, useFirst bool, useLast bool, unit string, seps ...string) setx.String {
-	sep := ""
-	if len(seps) > 0 {
-		sep = seps[0]
-	}
-
+func SubYearSets(before, last time.Time, useFirst bool, useLast bool) setx.String {
 	tmp := ""
 	set := setx.NewString()
 	if useFirst {
-		if unit == "y" {
-			tmp = strconv.Itoa(before.Year())
-		} else if unit == "m" {
-			tmp = fmt.Sprintf("%d%s%02d", before.Year(), sep, before.Month())
-		} else if unit == "d" {
-			tmp = fmt.Sprintf("%d%s%02d%s%02d", before.Year(), sep, before.Month(), sep, before.Day())
-		}
+		tmp = strconv.Itoa(before.Year())
 		set.Insert(tmp)
 	}
 
 	cursor := before
 	lastone := ""
 	for cursor.Before(last) {
-		if unit == "y" {
-			cursor = cursor.AddDate(1, 0, 0)
-			tmp = strconv.Itoa(cursor.Year())
-		} else if unit == "m" {
-			cursor = cursor.AddDate(0, 1, 0)
-			tmp = fmt.Sprintf("%d%s%02d", cursor.Year(), sep, cursor.Month())
-		} else if unit == "d" {
-			cursor = cursor.AddDate(0, 0, 1)
-			tmp = fmt.Sprintf("%d%s%02d%s%02d", cursor.Year(), sep, cursor.Month(), sep, cursor.Day())
-		}
+		cursor = cursor.AddDate(1, 0, 0)
+		tmp = strconv.Itoa(cursor.Year())
 
 		if cursor.Before(last) {
 			set.Insert(tmp)
@@ -127,21 +108,72 @@ func subSets(before, last time.Time, useFirst bool, useLast bool, unit string, s
 	}
 
 	if len(lastone) > 0 && !useLast {
-		fmt.Println("delete ", lastone)
 		set.Delete(lastone)
 	}
 
 	return set
 }
 
-func SubYearSets(before, last time.Time, useFirst bool, useLast bool) setx.String {
-	return subSets(before, last, useFirst, useLast, "y")
-}
-
 func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...string) setx.String {
-	return subSets(before, last, useFirst, useLast, "m", seps...)
+	sep := ""
+	if len(seps) > 0 {
+		sep = seps[0]
+	}
+
+	tmp := ""
+	set := setx.NewString()
+	if useFirst {
+		tmp = fmt.Sprintf("%d%s%02d", before.Year(), sep, before.Month())
+		set.Insert(tmp)
+	}
+
+	cursor := before
+	lastone := ""
+	for cursor.Before(last) {
+		cursor = cursor.AddDate(0, 1, 0)
+		tmp = fmt.Sprintf("%d%s%02d", cursor.Year(), sep, cursor.Month())
+
+		if cursor.Before(last) {
+			set.Insert(tmp)
+			lastone = tmp
+		}
+	}
+
+	if len(lastone) > 0 && !useLast {
+		set.Delete(lastone)
+	}
+
+	return set
 }
 
 func SubDaySets(before, last time.Time, useFirst bool, useLast bool, seps ...string) setx.String {
-	return subSets(before, last, useFirst, useLast, "d", seps...)
+	sep := ""
+	if len(seps) > 0 {
+		sep = seps[0]
+	}
+
+	tmp := ""
+	set := setx.NewString()
+	if useFirst {
+		tmp = fmt.Sprintf("%d%s%02d%s%02d", before.Year(), sep, before.Month(), sep, before.Day())
+		set.Insert(tmp)
+	}
+
+	cursor := before
+	lastone := ""
+	for cursor.Before(last) {
+		cursor = cursor.AddDate(0, 0, 1)
+		tmp = fmt.Sprintf("%d%s%02d%s%02d", cursor.Year(), sep, cursor.Month(), sep, cursor.Day())
+
+		if cursor.Before(last) {
+			set.Insert(tmp)
+			lastone = tmp
+		}
+	}
+
+	if len(lastone) > 0 && !useLast {
+		set.Delete(lastone)
+	}
+
+	return set
 }
