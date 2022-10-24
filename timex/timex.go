@@ -2,20 +2,21 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-22 18:03:00
+ * @LastEditTime: 2022-10-24 22:16:58
  * @Description:
  */
 package timex
 
 import (
-	"fmt"
-	"strconv"
+	"strings"
 	"time"
-
-	"github.com/cnjeffliu/gocore/setx"
 )
 
 const (
+	TIME_LAYOUT_YEAR        = "2006"
+	TIME_LAYOUT_MONTH       = "2006-01"
+	TIME_LAYOUT_DAY         = "2006-01-02"
+	TIME_LAYOUT_MINUTE      = "2006-01-02 15:04"
 	TIME_LAYOUT_SECOND      = "2006-01-02 15:04:05"
 	TIME_LAYOUT_MILLSECOND  = "2006-01-02 15:04:05.000"
 	TIME_LAYOUT_MICROSECOND = "2006-01-02 15:04:05.000000"
@@ -63,20 +64,19 @@ func TSToTime(sec int64, nsec int64) time.Time {
 	return time.Unix(sec, nsec)
 }
 
-func SubDays(before, last string) int {
+// SubDays return the days between before and last
+func SubDays(before, last time.Time) int {
 	var day int
-	t1, _ := time.Parse(TIME_LAYOUT_SECOND, before)
-	t2, _ := time.Parse(TIME_LAYOUT_SECOND, last)
 	swap := false
-	if t1.Unix() > t2.Unix() {
-		t1, t2 = t2, t1
+	if before.Unix() > last.Unix() {
+		before, last = last, before
 		swap = true
 	}
 
-	t1_ := t1.Add(time.Duration(t2.Sub(t1).Milliseconds()%86400000) * time.Millisecond)
-	day = int(t2.Sub(t1).Hours() / 24)
+	t1_ := before.Add(time.Duration(last.Sub(before).Milliseconds()%86400000) * time.Millisecond)
+	day = int(last.Sub(before).Hours() / 24)
 	// 计算在t1+两个时间的余数之后天数是否有变化
-	if t1_.Day() != t1.Day() {
+	if t1_.Day() != before.Day() {
 		day += 1
 	}
 
@@ -87,93 +87,111 @@ func SubDays(before, last string) int {
 	return day
 }
 
-func SubYearSets(before, last time.Time, useFirst bool, useLast bool) setx.String {
-	tmp := ""
-	set := setx.NewString()
+// SubYearSets return the year set during before and last.
+// useFirst represent include the year of before.
+// useLast represent include the year of last.
+//
+// For example:
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubYearSets(before, after, true, true)
+// 		-> []string{"2020", "2021"}
+func SubYearSets(before, last time.Time, useFirst bool, useLast bool) []string {
+	d := []string{}
 	if useFirst {
-		tmp = strconv.Itoa(before.Year())
-		set.Insert(tmp)
+		d = append(d, before.Format(TIME_LAYOUT_YEAR))
 	}
 
 	cursor := before
-	lastone := ""
 	for cursor.Before(last) {
 		cursor = cursor.AddDate(1, 0, 0)
-		tmp = strconv.Itoa(cursor.Year())
 
 		if cursor.Before(last) {
-			set.Insert(tmp)
-			lastone = tmp
+			d = append(d, cursor.Format(TIME_LAYOUT_YEAR))
 		}
 	}
 
-	if len(lastone) > 0 && !useLast {
-		set.Delete(lastone)
+	if !useLast {
+		if len(d) > 0 {
+			d = d[0 : len(d)-1]
+		}
 	}
 
-	return set
+	return d
 }
 
-func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...string) setx.String {
-	sep := ""
+// SubMonSets return the month set during before and last.
+// useFirst represent include the month of before.
+// useLast represent include the month of last.
+//
+// For example:
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubMonSets(before, after, true, true)
+// 		-> []string{"2020-12", "2021-01"}
+func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
+	format := TIME_LAYOUT_MONTH
 	if len(seps) > 0 {
-		sep = seps[0]
+		format = strings.ReplaceAll(format, "-", seps[0])
 	}
 
-	tmp := ""
-	set := setx.NewString()
+	d := []string{}
 	if useFirst {
-		tmp = fmt.Sprintf("%d%s%02d", before.Year(), sep, before.Month())
-		set.Insert(tmp)
+		d = append(d, before.Format(format))
 	}
 
 	cursor := before
-	lastone := ""
 	for cursor.Before(last) {
 		cursor = cursor.AddDate(0, 1, 0)
-		tmp = fmt.Sprintf("%d%s%02d", cursor.Year(), sep, cursor.Month())
 
 		if cursor.Before(last) {
-			set.Insert(tmp)
-			lastone = tmp
+			d = append(d, cursor.Format(format))
 		}
 	}
 
-	if len(lastone) > 0 && !useLast {
-		set.Delete(lastone)
+	if !useLast {
+		if len(d) > 0 {
+			d = d[0 : len(d)-1]
+		}
 	}
 
-	return set
+	return d
 }
 
-func SubDaySets(before, last time.Time, useFirst bool, useLast bool, seps ...string) setx.String {
-	sep := ""
+// SubDaySets return the date set during before and last.
+// useFirst represent include the date of before.
+// useLast represent include the date of last.
+//
+// For example:
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubDaySets(before, after, true, true)
+// 		-> []string{"2020-12-28","2020-12-29","2020-12-30", "2020-12-31","2021-01-01","2021-01-02"}
+func SubDaySets(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
+	format := TIME_LAYOUT_DAY
 	if len(seps) > 0 {
-		sep = seps[0]
+		format = strings.ReplaceAll(format, "-", seps[0])
 	}
 
-	tmp := ""
-	set := setx.NewString()
+	d := []string{}
 	if useFirst {
-		tmp = fmt.Sprintf("%d%s%02d%s%02d", before.Year(), sep, before.Month(), sep, before.Day())
-		set.Insert(tmp)
+		d = append(d, before.Format(format))
 	}
 
 	cursor := before
-	lastone := ""
 	for cursor.Before(last) {
 		cursor = cursor.AddDate(0, 0, 1)
-		tmp = fmt.Sprintf("%d%s%02d%s%02d", cursor.Year(), sep, cursor.Month(), sep, cursor.Day())
 
 		if cursor.Before(last) {
-			set.Insert(tmp)
-			lastone = tmp
+			d = append(d, cursor.Format(format))
 		}
 	}
 
-	if len(lastone) > 0 && !useLast {
-		set.Delete(lastone)
+	if !useLast {
+		if len(d) > 0 {
+			d = d[0 : len(d)-1]
+		}
 	}
 
-	return set
+	return d
 }
