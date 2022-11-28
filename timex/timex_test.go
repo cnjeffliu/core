@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-10-21 23:40:50
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-24 11:09:17
+ * @LastEditTime: 2022-10-24 21:56:30
  * @Description:
  */
 package timex_test
@@ -55,6 +55,18 @@ func TestSubMonSets(t *testing.T) {
 	useFirst = false
 	useLast = false
 	assert.Equal(t, []string{"202012"}, timex.SubMonSets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+}
+
+func TestSubDays(t *testing.T) {
+	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+
+	assert.Equal(t, 5, timex.SubDays(before, after))
+
+	before = time.Date(2021, 1, 1, 23, 59, 59, 0, time.Local)
+	after = time.Date(2021, 1, 2, 0, 0, 1, 0, time.Local)
+
+	assert.Equal(t, 1, timex.SubDays(before, after))
 }
 
 func TestSubDaySets(t *testing.T) {

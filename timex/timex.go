@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-24 11:04:57
+ * @LastEditTime: 2022-10-24 22:16:58
  * @Description:
  */
 package timex
@@ -64,20 +64,19 @@ func TSToTime(sec int64, nsec int64) time.Time {
 	return time.Unix(sec, nsec)
 }
 
-func SubDays(before, last string) int {
+// SubDays return the days between before and last
+func SubDays(before, last time.Time) int {
 	var day int
-	t1, _ := time.Parse(TIME_LAYOUT_SECOND, before)
-	t2, _ := time.Parse(TIME_LAYOUT_SECOND, last)
 	swap := false
-	if t1.Unix() > t2.Unix() {
-		t1, t2 = t2, t1
+	if before.Unix() > last.Unix() {
+		before, last = last, before
 		swap = true
 	}
 
-	t1_ := t1.Add(time.Duration(t2.Sub(t1).Milliseconds()%86400000) * time.Millisecond)
-	day = int(t2.Sub(t1).Hours() / 24)
+	t1_ := before.Add(time.Duration(last.Sub(before).Milliseconds()%86400000) * time.Millisecond)
+	day = int(last.Sub(before).Hours() / 24)
 	// 计算在t1+两个时间的余数之后天数是否有变化
-	if t1_.Day() != t1.Day() {
+	if t1_.Day() != before.Day() {
 		day += 1
 	}
 
@@ -88,6 +87,15 @@ func SubDays(before, last string) int {
 	return day
 }
 
+// SubYearSets return the year set during before and last.
+// useFirst represent include the year of before.
+// useLast represent include the year of last.
+//
+// For example:
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubYearSets(before, after, true, true)
+// 		-> []string{"2020", "2021"}
 func SubYearSets(before, last time.Time, useFirst bool, useLast bool) []string {
 	d := []string{}
 	if useFirst {
@@ -112,6 +120,15 @@ func SubYearSets(before, last time.Time, useFirst bool, useLast bool) []string {
 	return d
 }
 
+// SubMonSets return the month set during before and last.
+// useFirst represent include the month of before.
+// useLast represent include the month of last.
+//
+// For example:
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubMonSets(before, after, true, true)
+// 		-> []string{"2020-12", "2021-01"}
 func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
 	format := TIME_LAYOUT_MONTH
 	if len(seps) > 0 {
@@ -141,6 +158,15 @@ func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...str
 	return d
 }
 
+// SubDaySets return the date set during before and last.
+// useFirst represent include the date of before.
+// useLast represent include the date of last.
+//
+// For example:
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubDaySets(before, after, true, true)
+// 		-> []string{"2020-12-28","2020-12-29","2020-12-30", "2020-12-31","2021-01-01","2021-01-02"}
 func SubDaySets(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
 	format := TIME_LAYOUT_DAY
 	if len(seps) > 0 {
