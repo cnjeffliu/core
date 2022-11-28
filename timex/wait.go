@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-08-26 11:42:04
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-08-27 16:06:04
+ * @LastEditTime: 2022-11-25 16:55:39
  * @Description:
  */
 package timex
@@ -10,8 +10,6 @@ package timex
 import (
 	"math/rand"
 	"time"
-
-	"github.com/cnjeffliu/gocore/clock"
 )
 
 func Jitter(duration time.Duration, maxFactor float64) time.Duration {
@@ -23,19 +21,19 @@ func Jitter(duration time.Duration, maxFactor float64) time.Duration {
 }
 
 type BackoffManager interface {
-	Backoff() clock.Timer
+	Backoff() Timer
 }
 
 type jitteredBackoffManagerImpl struct {
-	clock    clock.Clock
-	timer    clock.Timer
+	clock    Clock
+	timer    Timer
 	duration time.Duration
 	jitter   float64
 }
 
 // NewJitteredBackoffManager returns a BackoffManager that backoffs with given duration plus given jitter. If the jitter
 // is negative, backoff will not be jittered.
-func NewJitteredBackoffManager(duration time.Duration, jitter float64, c clock.Clock) BackoffManager {
+func NewJitteredBackoffManager(duration time.Duration, jitter float64, c Clock) BackoffManager {
 	return &jitteredBackoffManagerImpl{
 		clock:    c,
 		duration: duration,
@@ -54,7 +52,7 @@ func (j *jitteredBackoffManagerImpl) getNextBackoff() time.Duration {
 
 // Backoff implements BackoffManager.Backoff, it returns a timer so caller can block on the timer for jittered backoff.
 // The returned timer must be drained before calling Backoff() the second time
-func (j *jitteredBackoffManagerImpl) Backoff() clock.Timer {
+func (j *jitteredBackoffManagerImpl) Backoff() Timer {
 	backoff := j.getNextBackoff()
 	if j.timer == nil {
 		j.timer = j.clock.NewTimer(backoff)
@@ -69,11 +67,11 @@ func Until(f func(), period time.Duration, stopCh <-chan struct{}) {
 }
 
 func JitterUntil(f func(), period time.Duration, jitterFactor float64, sliding bool, stopCh <-chan struct{}) {
-	BackoffUntil(f, NewJitteredBackoffManager(period, jitterFactor, &clock.RealClock{}), sliding, stopCh)
+	BackoffUntil(f, NewJitteredBackoffManager(period, jitterFactor, &RealClock{}), sliding, stopCh)
 }
 
 func BackoffUntil(f func(), backoff BackoffManager, sliding bool, stopCh <-chan struct{}) {
-	var t clock.Timer
+	var t Timer
 	for {
 		select {
 		case <-stopCh:
@@ -99,10 +97,10 @@ func BackoffUntil(f func(), backoff BackoffManager, sliding bool, stopCh <-chan 
 		select {
 		case <-stopCh:
 			if !t.Stop() {
-				<-t.C()
+				<-t.Chan()
 			}
 			return
-		case <-t.C():
+		case <-t.Chan():
 		}
 	}
 }

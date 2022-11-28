@@ -2,11 +2,11 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-07-20 13:56:48
+ * @LastEditTime: 2022-11-25 16:53:49
  * @Description:
  */
 
-package clock
+package timex
 
 import "time"
 
@@ -47,7 +47,7 @@ type WithTicker interface {
 
 // Ticker defines the Ticker interface.
 type Ticker interface {
-	C() <-chan time.Time
+	Chan() <-chan time.Time
 	Stop()
 }
 
@@ -110,7 +110,7 @@ func (RealClock) Sleep(d time.Duration) {
 // Timer allows for injecting fake or real timers into code that
 // needs to do arbitrary things based on time.
 type Timer interface {
-	C() <-chan time.Time
+	Chan() <-chan time.Time
 	Stop() bool
 	Reset(d time.Duration) bool
 }
@@ -123,7 +123,7 @@ type realTimer struct {
 }
 
 // C returns the underlying timer's channel.
-func (r *realTimer) C() <-chan time.Time {
+func (r *realTimer) Chan() <-chan time.Time {
 	return r.timer.C
 }
 
@@ -141,7 +141,7 @@ type realTicker struct {
 	ticker *time.Ticker
 }
 
-func (r *realTicker) C() <-chan time.Time {
+func (r *realTicker) Chan() <-chan time.Time {
 	return r.ticker.C
 }
 
