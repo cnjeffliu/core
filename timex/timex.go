@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-24 22:16:58
+ * @LastEditTime: 2022-11-30 09:18:48
  * @Description:
  */
 package timex
@@ -13,14 +13,18 @@ import (
 )
 
 const (
-	TIME_LAYOUT_YEAR        = "2006"
-	TIME_LAYOUT_MONTH       = "2006-01"
-	TIME_LAYOUT_DAY         = "2006-01-02"
-	TIME_LAYOUT_MINUTE      = "2006-01-02 15:04"
-	TIME_LAYOUT_SECOND      = "2006-01-02 15:04:05"
-	TIME_LAYOUT_MILLSECOND  = "2006-01-02 15:04:05.000"
-	TIME_LAYOUT_MICROSECOND = "2006-01-02 15:04:05.000000"
-	TIME_LAYOUT_NANOSECOND  = "2006-01-02 15:04:05.000000000"
+	TIME_LAYOUT_YEAR                  = "2006"                          // YYYY
+	TIME_LAYOUT_MONTH                 = "2006-01"                       // YYYY-MM
+	TIME_LAYOUT_DAY                   = "2006-01-02"                    // YYYY-MM-DD
+	TIME_LAYOUT_MINUTE                = "2006-01-02 15:04"              // YYYY-MM-DD HH:mm
+	TIME_LAYOUT_SECOND                = "2006-01-02 15:04:05"           // YYYY-MM-DD HH-mm:SS
+	TIME_LAYOUT_MILLSECOND            = "2006-01-02 15:04:05.000"       // YYYY-MM-DD HH-mm:SS.NNN
+	TIME_LAYOUT_MICROSECOND           = "2006-01-02 15:04:05.000000"    // YYYY-MM-DD HH-mm:SS.NNNNNN
+	TIME_LAYOUT_NANOSECOND            = "2006-01-02 15:04:05.000000000" // YYYY-MM-DD HH-mm:SS.NNNNNNNNN
+	TIME_LAYOUT_COMPACT_DAY           = "20060102"                      // YYYYMMDD
+	TIME_LAYOUT_COMPACT_SIMPLE_SECOND = "150405"                        // hhmmss
+	TIME_LAYOUT_COMPACT_EXT_SECOND    = "0102150405"                    // MMDDhhmmss
+	TIME_LAYOUT_COMPACT_SECOND        = "20060102150405"                // YYYYMMDDhhmmss
 )
 
 func NowS() int64 {
@@ -92,10 +96,11 @@ func SubDays(before, last time.Time) int {
 // useLast represent include the year of last.
 //
 // For example:
+//
 //	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
 //	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
 //	Call SubYearSets(before, after, true, true)
-// 		-> []string{"2020", "2021"}
+//		-> []string{"2020", "2021"}
 func SubYearSets(before, last time.Time, useFirst bool, useLast bool) []string {
 	d := []string{}
 	if useFirst {
@@ -125,10 +130,11 @@ func SubYearSets(before, last time.Time, useFirst bool, useLast bool) []string {
 // useLast represent include the month of last.
 //
 // For example:
+//
 //	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
 //	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
 //	Call SubMonSets(before, after, true, true)
-// 		-> []string{"2020-12", "2021-01"}
+//		-> []string{"2020-12", "2021-01"}
 func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
 	format := TIME_LAYOUT_MONTH
 	if len(seps) > 0 {
@@ -163,10 +169,11 @@ func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...str
 // useLast represent include the date of last.
 //
 // For example:
+//
 //	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
 //	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
 //	Call SubDaySets(before, after, true, true)
-// 		-> []string{"2020-12-28","2020-12-29","2020-12-30", "2020-12-31","2021-01-01","2021-01-02"}
+//		-> []string{"2020-12-28","2020-12-29","2020-12-30", "2020-12-31","2021-01-01","2021-01-02"}
 func SubDaySets(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
 	format := TIME_LAYOUT_DAY
 	if len(seps) > 0 {
