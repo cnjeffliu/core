@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-11-30 09:18:48
+ * @LastEditTime: 2022-12-01 18:19:58
  * @Description:
  */
 package timex
@@ -17,10 +17,10 @@ const (
 	TIME_LAYOUT_MONTH                 = "2006-01"                       // YYYY-MM
 	TIME_LAYOUT_DAY                   = "2006-01-02"                    // YYYY-MM-DD
 	TIME_LAYOUT_MINUTE                = "2006-01-02 15:04"              // YYYY-MM-DD HH:mm
-	TIME_LAYOUT_SECOND                = "2006-01-02 15:04:05"           // YYYY-MM-DD HH-mm:SS
-	TIME_LAYOUT_MILLSECOND            = "2006-01-02 15:04:05.000"       // YYYY-MM-DD HH-mm:SS.NNN
-	TIME_LAYOUT_MICROSECOND           = "2006-01-02 15:04:05.000000"    // YYYY-MM-DD HH-mm:SS.NNNNNN
-	TIME_LAYOUT_NANOSECOND            = "2006-01-02 15:04:05.000000000" // YYYY-MM-DD HH-mm:SS.NNNNNNNNN
+	TIME_LAYOUT_SECOND                = "2006-01-02 15:04:05"           // YYYY-MM-DD HH:mm:SS
+	TIME_LAYOUT_MILLSECOND            = "2006-01-02 15:04:05.000"       // YYYY-MM-DD HH:mm:SS.NNN
+	TIME_LAYOUT_MICROSECOND           = "2006-01-02 15:04:05.000000"    // YYYY-MM-DD HH:mm:SS.NNNNNN
+	TIME_LAYOUT_NANOSECOND            = "2006-01-02 15:04:05.000000000" // YYYY-MM-DD HH:mm:SS.NNNNNNNNN
 	TIME_LAYOUT_COMPACT_DAY           = "20060102"                      // YYYYMMDD
 	TIME_LAYOUT_COMPACT_SIMPLE_SECOND = "150405"                        // hhmmss
 	TIME_LAYOUT_COMPACT_EXT_SECOND    = "0102150405"                    // MMDDhhmmss
@@ -46,6 +46,16 @@ func ElapseNS(begin time.Time) int64 {
 // input format is 2022-01-01 01:00:00
 func StrToTime(s string) time.Time {
 	d, err := time.ParseInLocation(TIME_LAYOUT_SECOND, s, time.Local)
+	if err != nil {
+		return time.Now()
+	}
+
+	return d
+}
+
+// input format is 2022-01-01
+func DateStrToTime(s string) time.Time {
+	d, err := time.ParseInLocation(TIME_LAYOUT_DAY, s, time.Local)
 	if err != nil {
 		return time.Now()
 	}
