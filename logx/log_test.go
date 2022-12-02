@@ -1,17 +1,21 @@
 /*
  * @Author: Jeffrey.Liu
  * @Date: 2021-07-19 11:58:51
- * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-15 16:25:35
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-12-02 23:28:54
  * @Description:
  */
-package logx
+package logx_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/cnjeffliu/gocore/logx"
+)
 
 func TestWriteLog(t *testing.T) {
-	Init(WithFile("output.log"))
+	logx.Init("output.log")
 
-	Info("init")
-	Debug("test")
+	logx.Info("init")
+	logx.Debugf("%v", "debug info")
 }

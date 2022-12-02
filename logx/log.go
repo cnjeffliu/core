@@ -1,8 +1,8 @@
 /*
  * @Author: Jeffrey.Liu
  * @Date: 2019-01-26 15:20:02
- * @LastEditors: Jeffrey.Liu
- * @LastEditTime: 2021-12-15 16:26:24
+ * @LastEditors: Jeffrey Liu
+ * @LastEditTime: 2022-12-02 23:27:39
  * @Description: 日志组件封装
  */
 package logx
@@ -31,20 +31,17 @@ var levelMap = map[string]zapcore.Level{
 	"fatal":  zapcore.FatalLevel,
 }
 
-type LogOption func() string
-
-func Init(opts ...LogOption) {
-	filename := "./log/debug.log"
-
-	for _, opt := range opts {
-		filename = opt()
+func Init(filename ...string) {
+	f := "./log/debug.log"
+	if len(filename) > 0 && len(filename[0]) > 0 {
+		f = filename[0]
 	}
 
 	aLevel = zap.NewAtomicLevel()
 	aLevel.SetLevel(getLogLevel("debug"))
 
 	hook := lumberjack.Logger{
-		Filename:   filename,
+		Filename:   f,
 		MaxSize:    200, // megabytes
 		MaxBackups: 10,
 		MaxAge:     7,    //days
@@ -82,12 +79,6 @@ func toStr(format string, fmtArgs []interface{}) string {
 		msg = fmt.Sprintf(format, fmtArgs...)
 	}
 	return msg
-}
-
-func WithFile(logpath string) LogOption {
-	return func() string {
-		return logpath
-	}
 }
 
 func getLogLevel(lvl string) zapcore.Level {
