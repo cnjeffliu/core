@@ -1,4 +1,4 @@
-module github.com/cnjeffliu/gocore
+module github.com/cnzf1/gocore
 
 go 1.16
 

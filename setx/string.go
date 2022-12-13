@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/cnjeffliu/gocore/typex"
+	"github.com/cnzf1/gocore/typex"
 )
 
 // sets.String is a set of strings, implemented via map[string]struct{} for minimal memory consumption.

@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cnjeffliu/gocore/timex"
+	"github.com/cnzf1/gocore/timex"
 )
 
 func TestJitterdBackoff(t *testing.T) {

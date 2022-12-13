@@ -10,7 +10,7 @@ package logx_test
 import (
 	"testing"
 
-	"github.com/cnjeffliu/gocore/logx"
+	"github.com/cnzf1/gocore/logx"
 )
 
 func TestWriteLog(t *testing.T) {

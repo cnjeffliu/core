@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cnjeffliu/gocore/queue"
+	"github.com/cnzf1/gocore/queue"
 )
 
 func TestBasic(t *testing.T) {

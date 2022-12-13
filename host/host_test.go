@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-09-13 20:37:28
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-09-13 20:42:27
+ * @LastEditTime: 2022-12-13 14:11:47
  * @Description:
  */
 package host_test
@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cnjeffliu/gocore/host"
-	"github.com/cnjeffliu/gocore/timex"
+	"github.com/cnzf1/gocore/host"
+	"github.com/cnzf1/gocore/timex"
 )
 
 func TestBTime(t *testing.T) {

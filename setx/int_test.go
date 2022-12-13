@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cnjeffliu/gocore/setx"
+	"github.com/cnzf1/gocore/setx"
 )
 
 func TestIntSet(t *testing.T) {

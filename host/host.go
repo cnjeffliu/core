@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cnjeffliu/gocore/filex"
+	"github.com/cnzf1/gocore/filex"
 )
 
 func GetBtime() int64 {

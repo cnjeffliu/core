@@ -12,8 +12,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/cnjeffliu/gocore/setx"
-	"github.com/cnjeffliu/gocore/typex"
+	"github.com/cnzf1/gocore/setx"
+	"github.com/cnzf1/gocore/typex"
 )
 
 func NewQueue() *Queue {

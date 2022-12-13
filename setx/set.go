@@ -7,7 +7,7 @@
  */
 package setx
 
-import "github.com/cnjeffliu/gocore/typex"
+import "github.com/cnzf1/gocore/typex"
 
 type Set map[typex.T]typex.Empty
 

@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cnjeffliu/gocore/timex"
+	"github.com/cnzf1/gocore/timex"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -10,7 +10,7 @@ package proc_test
 import (
 	"testing"
 
-	"github.com/cnjeffliu/gocore/proc"
+	"github.com/cnzf1/gocore/proc"
 	"github.com/stretchr/testify/assert"
 )
 

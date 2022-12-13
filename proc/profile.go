@@ -23,7 +23,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/cnjeffliu/gocore/timex"
+	"github.com/cnzf1/gocore/timex"
 )
 
 // DefaultMemProfileRate is the default memory profiling rate.
