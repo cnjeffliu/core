@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:02
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-12-01 19:41:40
+ * @LastEditTime: 2022-10-21 23:34:09
  * @Description:
  */
 
@@ -12,8 +12,8 @@ import (
 	"sync"
 	"sync/atomic"
 
+	"github.com/cnzf1/gocore/lang"
 	"github.com/cnzf1/gocore/setx"
-	"github.com/cnzf1/gocore/typex"
 )
 
 func NewQueue() *Queue {
@@ -27,7 +27,7 @@ func NewQueue() *Queue {
 }
 
 type Queue struct {
-	queue      []typex.T
+	queue      []lang.AnyType
 	queueLen   int32
 	dirty      setx.Set
 	processing setx.Set
@@ -165,16 +165,4 @@ func (q *Queue) ShuttingDown() bool {
 	defer q.cond.L.Unlock()
 
 	return q.shuttingDown
-}
-
-func (q *Queue) Clear() {
-	q.cond.L.Lock()
-
-	q.queue = q.queue[0:0]
-	atomic.StoreInt32(&q.queueLen, 0)
-	q.processing = setx.Set{}
-	atomic.StoreInt32(&q.processLen, 0)
-	q.dirty = setx.Set{}
-
-	q.cond.L.Unlock()
 }

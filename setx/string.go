@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-09-03 20:24:55
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-21 23:33:43
+ * @LastEditTime: 2022-12-13 14:25:47
  * @Description:
  */
 
@@ -12,11 +12,11 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/cnzf1/gocore/typex"
+	"github.com/cnzf1/gocore/lang"
 )
 
 // sets.String is a set of strings, implemented via map[string]struct{} for minimal memory consumption.
-type String map[string]typex.Empty
+type String map[string]lang.PlaceholderType
 
 // NewString creates a String from a list of values.
 func NewString(items ...string) String {
@@ -40,7 +40,7 @@ func StringKeySet(theMap interface{}) String {
 // Insert adds items to the set.
 func (s String) Insert(items ...string) String {
 	for _, item := range items {
-		s[item] = typex.Empty{}
+		s[item] = lang.Placeholder
 	}
 	return s
 }

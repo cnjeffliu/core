@@ -30,6 +30,6 @@ func TestIntSet(t *testing.T) {
 	// map[2:{} 3:{} 5:{} 1111:{} 3333:{}]
 	// v  map[2:{} 3:{} 5:{} 1111:{} 3333:{}]
 	// +v map[2:{} 3:{} 5:{} 1111:{} 3333:{}]
-	// #v sets.Int{2:typex.Empty{}, 3:typex.Empty{}, 5:typex.Empty{}, 1111:typex.Empty{}, 3333:typex.Empty{}}
+	// #v sets.Int{2:lang.PlaceholderType{}, 3:lang.PlaceholderType{}, 5:lang.PlaceholderType{}, 1111:lang.PlaceholderType{}, 3333:lang.PlaceholderType{}}
 	// [2 3 5 1111 3333]
 }

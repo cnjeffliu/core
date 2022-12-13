@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:51:53
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-21 23:33:26
+ * @LastEditTime: 2022-12-13 14:23:54
  * @Description:
  */
 package setx
@@ -11,11 +11,11 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/cnzf1/gocore/typex"
+	"github.com/cnzf1/gocore/lang"
 )
 
 // sets.Int is a set of ints, implemented via map[int]struct{} for minimal memory consumption.
-type Int map[int]typex.Empty
+type Int map[int]lang.PlaceholderType
 
 // NewInt creates a Int from a list of values.
 func NewInt(items ...int) Int {
@@ -39,7 +39,7 @@ func IntKeySet(theMap interface{}) Int {
 // Insert adds items to the set.
 func (s Int) Insert(items ...int) Int {
 	for _, item := range items {
-		s[item] = typex.Empty{}
+		s[item] = lang.Placeholder
 	}
 	return s
 }

@@ -2,25 +2,27 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:51:53
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-21 23:33:38
+ * @LastEditTime: 2022-12-13 14:25:17
  * @Description:
  */
 package setx
 
-import "github.com/cnzf1/gocore/typex"
+import (
+	"github.com/cnzf1/gocore/lang"
+)
 
-type Set map[typex.T]typex.Empty
+type Set map[lang.AnyType]lang.PlaceholderType
 
-func (s Set) Has(item typex.T) bool {
+func (s Set) Has(item lang.AnyType) bool {
 	_, exists := s[item]
 	return exists
 }
 
-func (s Set) Insert(item typex.T) {
-	s[item] = typex.Empty{}
+func (s Set) Insert(item lang.AnyType) {
+	s[item] = lang.Placeholder
 }
 
-func (s Set) Delete(item typex.T) {
+func (s Set) Delete(item lang.AnyType) {
 	delete(s, item)
 }
 

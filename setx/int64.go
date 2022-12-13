@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:51:53
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-10-21 23:33:32
+ * @LastEditTime: 2022-12-13 14:24:54
  * @Description:
  */
 package setx
@@ -11,11 +11,11 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/cnzf1/gocore/typex"
+	"github.com/cnzf1/gocore/lang"
 )
 
 // sets.Int64 is a set of int64s, implemented via map[int64]struct{} for minimal memory consumption.
-type Int64 map[int64]typex.Empty
+type Int64 map[int64]lang.PlaceholderType
 
 // NewInt64 creates a Int64 from a list of values.
 func NewInt64(items ...int64) Int64 {
@@ -39,7 +39,7 @@ func Int64KeySet(theMap interface{}) Int64 {
 // Insert adds items to the set.
 func (s Int64) Insert(items ...int64) Int64 {
 	for _, item := range items {
-		s[item] = typex.Empty{}
+		s[item] = lang.Placeholder
 	}
 	return s
 }
