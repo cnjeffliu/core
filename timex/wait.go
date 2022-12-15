@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-08-26 11:42:04
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-12-15 15:31:07
+ * @LastEditTime: 2022-12-15 16:25:11
  * @Description:
  */
 package timex
@@ -12,14 +12,14 @@ import (
 	"time"
 )
 
-// JitterUp return duration + rand * maxFactor * duration
+// JitterUp return duration + rand * factor * duration
 // For example for 10s and jitter 1, it will return a time within [10s, 20s])
-func JitterUp(duration time.Duration, maxFactor float64) time.Duration {
-	if maxFactor <= 0.0 {
-		maxFactor = 1.0
+func JitterUp(duration time.Duration, factor float64) time.Duration {
+	if factor <= 0.0 {
+		factor = 1.0
 	}
-	wait := duration + time.Duration(rand.Float64()*maxFactor*float64(duration))
-	return wait
+
+	return duration + time.Duration(rand.Float64()*factor*float64(duration))
 }
 
 // JitterAround return duration which added a random jitter

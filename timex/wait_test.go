@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-08-26 09:26:55
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-11-25 16:56:47
+ * @LastEditTime: 2022-12-15 16:13:53
  * @Description:
  */
 package timex_test
@@ -13,8 +13,24 @@ import (
 	"time"
 
 	"github.com/cnzf1/gocore/timex"
+	"github.com/stretchr/testify/assert"
 )
 
+func TestJitterUp(t *testing.T) {
+	s := time.Hour
+	d := timex.JitterUp(s, 1)
+
+	assert.GreaterOrEqual(t, d.Seconds(), s.Seconds())
+	assert.LessOrEqual(t, d.Seconds(), 2*s.Seconds())
+}
+
+func TestJitterAround(t *testing.T) {
+	s := time.Hour
+	d := timex.JitterAround(s, 1)
+
+	assert.GreaterOrEqual(t, d.Seconds(), 0.0)
+	assert.LessOrEqual(t, d.Seconds(), 2*s.Seconds())
+}
 func TestJitterdBackoff(t *testing.T) {
 	stopCh := make(chan struct{})
 	defer close(stopCh)
