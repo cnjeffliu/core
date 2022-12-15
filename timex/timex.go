@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-12-01 18:19:58
+ * @LastEditTime: 2022-12-15 14:55:06
  * @Description:
  */
 package timex
@@ -17,45 +17,60 @@ const (
 	TIME_LAYOUT_MONTH                 = "2006-01"                       // YYYY-MM
 	TIME_LAYOUT_DAY                   = "2006-01-02"                    // YYYY-MM-DD
 	TIME_LAYOUT_MINUTE                = "2006-01-02 15:04"              // YYYY-MM-DD HH:mm
-	TIME_LAYOUT_SECOND                = "2006-01-02 15:04:05"           // YYYY-MM-DD HH:mm:SS
-	TIME_LAYOUT_MILLSECOND            = "2006-01-02 15:04:05.000"       // YYYY-MM-DD HH:mm:SS.NNN
-	TIME_LAYOUT_MICROSECOND           = "2006-01-02 15:04:05.000000"    // YYYY-MM-DD HH:mm:SS.NNNNNN
-	TIME_LAYOUT_NANOSECOND            = "2006-01-02 15:04:05.000000000" // YYYY-MM-DD HH:mm:SS.NNNNNNNNN
+	TIME_LAYOUT_SECOND                = "2006-01-02 15:04:05"           // YYYY-MM-DD HH-mm:SS
+	TIME_LAYOUT_MILLSECOND            = "2006-01-02 15:04:05.000"       // YYYY-MM-DD HH-mm:SS.NNN
+	TIME_LAYOUT_MICROSECOND           = "2006-01-02 15:04:05.000000"    // YYYY-MM-DD HH-mm:SS.NNNNNN
+	TIME_LAYOUT_NANOSECOND            = "2006-01-02 15:04:05.000000000" // YYYY-MM-DD HH-mm:SS.NNNNNNNNN
 	TIME_LAYOUT_COMPACT_DAY           = "20060102"                      // YYYYMMDD
 	TIME_LAYOUT_COMPACT_SIMPLE_SECOND = "150405"                        // hhmmss
 	TIME_LAYOUT_COMPACT_EXT_SECOND    = "0102150405"                    // MMDDhhmmss
 	TIME_LAYOUT_COMPACT_SECOND        = "20060102150405"                // YYYYMMDDhhmmss
 )
 
-func NowS() int64 {
+// NowSecond returns the current seconds.
+func NowSecond() int64 {
 	return time.Now().Unix()
 }
 
-func NowMS() int64 {
-	return time.Now().UnixNano() / 1e6
+// NowMillis returns the current milliseconds.
+func NowMillis() int64 {
+	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
-func ElapseMS(begin time.Time) int64 {
-	return time.Now().Sub(begin).Microseconds()
+// NowMicros returns the current microseconds.
+func NowMicros() int64 {
+	return time.Now().UnixNano() / int64(time.Microsecond)
 }
 
-func ElapseNS(begin time.Time) int64 {
-	return time.Now().Sub(begin).Nanoseconds()
+type ElapsedTimer struct {
+	start time.Time
+}
+
+// NewElapsedTimer returns an ElapsedTimer.
+func NewElapsedTimer() *ElapsedTimer {
+	return &ElapsedTimer{
+		start: time.Now(),
+	}
+}
+
+// Duration returns the elapsed time.
+func (et *ElapsedTimer) Duration() time.Duration {
+	return time.Since(et.start)
+}
+
+// Elapsed returns the string representation of elapsed time.
+func (et *ElapsedTimer) Elapsed() time.Duration {
+	return time.Since(et.start)
+}
+
+// ElapsedMs returns the elapsed time of string on milliseconds.
+func (et *ElapsedTimer) ElapsedMs() float32 {
+	return float32(time.Since(et.start)) / float32(time.Millisecond)
 }
 
 // input format is 2022-01-01 01:00:00
 func StrToTime(s string) time.Time {
 	d, err := time.ParseInLocation(TIME_LAYOUT_SECOND, s, time.Local)
-	if err != nil {
-		return time.Now()
-	}
-
-	return d
-}
-
-// input format is 2022-01-01
-func DateStrToTime(s string) time.Time {
-	d, err := time.ParseInLocation(TIME_LAYOUT_DAY, s, time.Local)
 	if err != nil {
 		return time.Now()
 	}
