@@ -2,7 +2,7 @@
  * @Author: Jeffrey Liu
  * @Date: 2022-08-26 11:42:04
  * @LastEditors: Jeffrey Liu
- * @LastEditTime: 2022-12-15 14:38:53
+ * @LastEditTime: 2022-12-15 15:31:07
  * @Description:
  */
 package timex
@@ -12,9 +12,9 @@ import (
 	"time"
 )
 
-// Jitter return duration + rand * maxFactor * duration
+// JitterUp return duration + rand * maxFactor * duration
 // For example for 10s and jitter 1, it will return a time within [10s, 20s])
-func Jitter(duration time.Duration, maxFactor float64) time.Duration {
+func JitterUp(duration time.Duration, maxFactor float64) time.Duration {
 	if maxFactor <= 0.0 {
 		maxFactor = 1.0
 	}
@@ -22,11 +22,11 @@ func Jitter(duration time.Duration, maxFactor float64) time.Duration {
 	return wait
 }
 
-// jitterUp return duration which added a random jitter
+// JitterAround return duration which added a random jitter
 //
 // This adds or subtracts time from the duration within a given jitter fraction.
 // For example for 10s and jitter 0.1, it will return a time within [9s, 11s])
-func jitterUp(duration time.Duration, jitter float64) time.Duration {
+func JitterAround(duration time.Duration, jitter float64) time.Duration {
 	multiplier := jitter * (rand.Float64()*2 - 1)
 	return time.Duration(float64(duration) * (1 + multiplier))
 }
@@ -56,7 +56,7 @@ func NewJitteredBackoffManager(duration time.Duration, jitter float64, c Clock) 
 func (j *jitteredBackoffManagerImpl) getNextBackoff() time.Duration {
 	jitteredPeriod := j.duration
 	if j.jitter > 0.0 {
-		jitteredPeriod = Jitter(j.duration, j.jitter)
+		jitteredPeriod = JitterUp(j.duration, j.jitter)
 	}
 	return jitteredPeriod
 }
