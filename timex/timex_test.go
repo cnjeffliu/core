@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2022-10-21 23:40:50
  * @LastEditors: cnzf1
- * @LastEditTime: 2022-10-24 21:56:30
+ * @LastEditTime: 2023-01-10 10:41:11
  * @Description:
  */
 package timex_test
@@ -21,19 +21,19 @@ func TestSubYearSets(t *testing.T) {
 
 	useFirst := true
 	useLast := true
-	assert.Equal(t, []string{"2020", "2021"}, timex.SubYearSets(before, after, useFirst, useLast), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"2020", "2021"}, timex.SubYearSetsEx(before, after, useFirst, useLast), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = true
 	useLast = false
-	assert.Equal(t, []string{"2020"}, timex.SubYearSets(before, after, useFirst, useLast), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"2020"}, timex.SubYearSetsEx(before, after, useFirst, useLast), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = false
 	useLast = true
-	assert.Equal(t, []string{"2021"}, timex.SubYearSets(before, after, useFirst, useLast), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"2021"}, timex.SubYearSetsEx(before, after, useFirst, useLast), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = false
 	useLast = false
-	assert.Equal(t, []string{}, timex.SubYearSets(before, after, useFirst, useLast), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{}, timex.SubYearSetsEx(before, after, useFirst, useLast), "useFirst:%v useLast:%v", useFirst, useLast)
 }
 
 func TestSubMonSets(t *testing.T) {
@@ -42,19 +42,19 @@ func TestSubMonSets(t *testing.T) {
 
 	useFirst := true
 	useLast := true
-	assert.Equal(t, []string{"202011", "202012", "202101"}, timex.SubMonSets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"202011", "202012", "202101"}, timex.SubMonSetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = true
 	useLast = false
-	assert.Equal(t, []string{"202011", "202012"}, timex.SubMonSets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"202011", "202012"}, timex.SubMonSetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = false
 	useLast = true
-	assert.Equal(t, []string{"202012", "202101"}, timex.SubMonSets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"202012", "202101"}, timex.SubMonSetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = false
 	useLast = false
-	assert.Equal(t, []string{"202012"}, timex.SubMonSets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"202012"}, timex.SubMonSetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 }
 
 func TestSubDays(t *testing.T) {
@@ -75,19 +75,19 @@ func TestSubDaySets(t *testing.T) {
 
 	useFirst := true
 	useLast := true
-	assert.Equal(t, []string{"20220130", "20220131", "20220201", "20220202"}, timex.SubDaySets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"20220130", "20220131", "20220201", "20220202"}, timex.SubDaySetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = true
 	useLast = false
-	assert.Equal(t, []string{"20220130", "20220131", "20220201"}, timex.SubDaySets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"20220130", "20220131", "20220201"}, timex.SubDaySetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = false
 	useLast = true
-	assert.Equal(t, []string{"20220131", "20220201", "20220202"}, timex.SubDaySets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"20220131", "20220201", "20220202"}, timex.SubDaySetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 
 	useFirst = false
 	useLast = false
-	assert.Equal(t, []string{"20220131", "20220201"}, timex.SubDaySets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+	assert.Equal(t, []string{"20220131", "20220201"}, timex.SubDaySetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 }
 
 func BenchmarkSubDaySets(t *testing.B) {
@@ -97,6 +97,6 @@ func BenchmarkSubDaySets(t *testing.B) {
 	useFirst := true
 	useLast := true
 	for i := 0; i < t.N; i++ {
-		assert.Equal(t, []string{"20220130", "20220131", "20220201", "20220202"}, timex.SubDaySets(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
+		assert.Equal(t, []string{"20220130", "20220131", "20220201", "20220202"}, timex.SubDaySetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 	}
 }

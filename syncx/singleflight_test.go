@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2022-11-25 16:16:59
  * @LastEditors: cnzf1
- * @LastEditTime: 2022-11-28 14:33:09
+ * @LastEditTime: 2022-11-25 16:22:02
  * @Description:
  */
 package syncx
@@ -37,7 +37,7 @@ func TestExclusiveCallDoDiffDupSuppress(t *testing.T) {
 		}(key)
 	}
 
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond) // let goroutines above block
 	close(broadcast)
 	wg.Wait()
 

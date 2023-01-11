@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: cnzf1
- * @LastEditTime: 2022-12-15 14:55:06
+ * @LastEditTime: 2023-01-09 17:26:51
  * @Description:
  */
 package timex
@@ -27,45 +27,19 @@ const (
 	TIME_LAYOUT_COMPACT_SECOND        = "20060102150405"                // YYYYMMDDhhmmss
 )
 
-// NowSecond returns the current seconds.
-func NowSecond() int64 {
+// NowS returns the current seconds.
+func NowS() int64 {
 	return time.Now().Unix()
 }
 
-// NowMillis returns the current milliseconds.
-func NowMillis() int64 {
-	return time.Now().UnixNano() / int64(time.Millisecond)
+// NowMs returns the current milliseconds.
+func NowMs() int64 {
+	return TimeToMs(time.Now())
 }
 
-// NowMicros returns the current microseconds.
-func NowMicros() int64 {
+// NowUs returns the current microseconds.
+func NowUs() int64 {
 	return time.Now().UnixNano() / int64(time.Microsecond)
-}
-
-type ElapsedTimer struct {
-	start time.Time
-}
-
-// NewElapsedTimer returns an ElapsedTimer.
-func NewElapsedTimer() *ElapsedTimer {
-	return &ElapsedTimer{
-		start: time.Now(),
-	}
-}
-
-// Duration returns the elapsed time.
-func (et *ElapsedTimer) Duration() time.Duration {
-	return time.Since(et.start)
-}
-
-// Elapsed returns the string representation of elapsed time.
-func (et *ElapsedTimer) Elapsed() time.Duration {
-	return time.Since(et.start)
-}
-
-// ElapsedMs returns the elapsed time of string on milliseconds.
-func (et *ElapsedTimer) ElapsedMs() float32 {
-	return float32(time.Since(et.start)) / float32(time.Millisecond)
 }
 
 // input format is 2022-01-01 01:00:00
@@ -93,6 +67,17 @@ func TSToTime(sec int64, nsec int64) time.Time {
 	return time.Unix(sec, nsec)
 }
 
+// TimeToMs returns an integer number, which represents t in milliseconds.
+func TimeToMs(t time.Time) int64 {
+	return t.UnixNano() / int64(time.Millisecond)
+}
+
+// MillisToTime returns the UTC time corresponding to the given Unix time,
+// t milliseconds since January 1, 1970 UTC.
+func MsToUTCTime(t int64) time.Time {
+	return time.Unix(0, t*int64(time.Millisecond)).UTC()
+}
+
 // SubDays return the days between before and last
 func SubDays(before, last time.Time) int {
 	var day int
@@ -117,6 +102,18 @@ func SubDays(before, last time.Time) int {
 }
 
 // SubYearSets return the year set during before and last.
+//
+// For example:
+//
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubYearSets(before, after)
+//		-> []string{"2020", "2021"}
+func SubYearSets(before, last time.Time) []string {
+	return SubYearSetsEx(before, last, true, true)
+}
+
+// SubYearSetsEx return the year set during before and last.
 // useFirst represent include the year of before.
 // useLast represent include the year of last.
 //
@@ -124,9 +121,9 @@ func SubDays(before, last time.Time) int {
 //
 //	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
 //	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
-//	Call SubYearSets(before, after, true, true)
+//	Call SubYearSetsEx(before, after, true, true)
 //		-> []string{"2020", "2021"}
-func SubYearSets(before, last time.Time, useFirst bool, useLast bool) []string {
+func SubYearSetsEx(before, last time.Time, useFirst bool, useLast bool) []string {
 	d := []string{}
 	if useFirst {
 		d = append(d, before.Format(TIME_LAYOUT_YEAR))
@@ -151,6 +148,18 @@ func SubYearSets(before, last time.Time, useFirst bool, useLast bool) []string {
 }
 
 // SubMonSets return the month set during before and last.
+//
+// For example:
+//
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubMonSets(before, after)
+//		-> []string{"2020-12", "2021-01"}
+func SubMonSets(before, last time.Time, seps ...string) []string {
+	return SubMonSetsEx(before, last, true, true, seps...)
+}
+
+// SubMonSetsEx return the month set during before and last.
 // useFirst represent include the month of before.
 // useLast represent include the month of last.
 //
@@ -158,9 +167,9 @@ func SubYearSets(before, last time.Time, useFirst bool, useLast bool) []string {
 //
 //	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
 //	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
-//	Call SubMonSets(before, after, true, true)
+//	Call SubMonSetsEx(before, after, true, true)
 //		-> []string{"2020-12", "2021-01"}
-func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
+func SubMonSetsEx(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
 	format := TIME_LAYOUT_MONTH
 	if len(seps) > 0 {
 		format = strings.ReplaceAll(format, "-", seps[0])
@@ -190,6 +199,18 @@ func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...str
 }
 
 // SubDaySets return the date set during before and last.
+//
+// For example:
+//
+//	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
+//	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
+//	Call SubDaySets(before, after)
+//		-> []string{"2020-12-28","2020-12-29","2020-12-30", "2020-12-31","2021-01-01","2021-01-02"}
+func SubDaySets(before, last time.Time, seps ...string) []string {
+	return SubDaySetsEx(before, last, true, true, seps...)
+}
+
+// SubDaySetsEx return the date set during before and last.
 // useFirst represent include the date of before.
 // useLast represent include the date of last.
 //
@@ -197,9 +218,9 @@ func SubMonSets(before, last time.Time, useFirst bool, useLast bool, seps ...str
 //
 //	before := time.Date(2020, 12, 28, 1, 5, 10, 0, time.Local)
 //	after := time.Date(2021, 1, 2, 13, 10, 30, 0, time.Local)
-//	Call SubDaySets(before, after, true, true)
+//	Call SubDaySetsEx(before, after, true, true)
 //		-> []string{"2020-12-28","2020-12-29","2020-12-30", "2020-12-31","2021-01-01","2021-01-02"}
-func SubDaySets(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
+func SubDaySetsEx(before, last time.Time, useFirst bool, useLast bool, seps ...string) []string {
 	format := TIME_LAYOUT_DAY
 	if len(seps) > 0 {
 		format = strings.ReplaceAll(format, "-", seps[0])

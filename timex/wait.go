@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2022-08-26 11:42:04
  * @LastEditors: cnzf1
- * @LastEditTime: 2022-12-15 16:25:11
+ * @LastEditTime: 2022-12-15 16:31:34
  * @Description:
  */
 package timex
@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-// JitterUp return duration + rand * factor * duration
+// JitterUp return duration which added factor times the cardinality
 // For example for 10s and jitter 1, it will return a time within [10s, 20s])
 func JitterUp(duration time.Duration, factor float64) time.Duration {
 	if factor <= 0.0 {

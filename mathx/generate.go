@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2022-12-13 12:02:38
  * @LastEditors: cnzf1
- * @LastEditTime: 2022-12-14 16:51:58
+ * @LastEditTime: 2023-01-09 17:16:59
  * @Description:
  */
 package mathx
@@ -10,6 +10,8 @@ package mathx
 import (
 	"math/rand"
 	"time"
+
+	"github.com/cnzf1/gocore/timex"
 )
 
 // GenerateRandomStr return a random string, size specify the string length.
@@ -18,10 +20,9 @@ func GenerateRandomStr(size int) []byte {
 	var out []byte
 	var length = len(s)
 
-	now := time.Now().UnixNano() / 1e6
+	now := timex.NowMs()
 
-	basefmt := "2006-01-02 15:04:05"
-	t, _ := time.Parse(basefmt, "2020-01-01 01:01:01")
+	t, _ := time.Parse(timex.TIME_LAYOUT_SECOND, "2020-01-01 01:01:01")
 	base := t.UnixNano() / 1e6
 
 	period := now - base
