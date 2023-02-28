@@ -2,4 +2,5 @@
 .idea
 target
 kube_*
+sqlx/tool.go
 
