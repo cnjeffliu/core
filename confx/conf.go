@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2021-12-15 16:01:51
  * @LastEditors: cnzf1
- * @LastEditTime: 2023-02-27 17:47:19
+ * @LastEditTime: 2023-02-28 14:59:46
  * @Description: viper解析配置文件
  */
 package confx
@@ -10,8 +10,8 @@ package confx
 import (
 	"bytes"
 	"fmt"
-	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -27,6 +27,7 @@ const (
 )
 
 func check(t TYPE) bool {
+	t = TYPE(strings.ToLower(strings.Trim(string(t), ".")))
 	if t == TYPE_JSON {
 		return true
 	}
@@ -47,18 +48,12 @@ func check(t TYPE) bool {
 
 // Parse support file type:JSON, TOML, YAML, INI
 func Parse(target interface{}, fullpath string) {
-	dir, file := filepath.Split(fullpath)
-	name := filepath.Base(file)
-	typo := filepath.Ext(file)
-
+	typo := filepath.Ext(fullpath)
 	if !check(TYPE(typo)) {
 		return
 	}
 
-	confDir, _ := filepath.Abs(path.Dir(dir))
-	viper.AddConfigPath(confDir)
-	viper.SetConfigName(name)
-	viper.SetConfigType(typo)
+	viper.SetConfigFile(fullpath)
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
 	}

@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2021-12-15 16:21:51
  * @LastEditors: cnzf1
- * @LastEditTime: 2023-02-27 17:49:52
+ * @LastEditTime: 2023-02-28 15:42:57
  * @Description:
  */
 
@@ -10,7 +10,7 @@ package confx_test
 
 import (
 	"fmt"
-	"os"
+	"io/ioutil"
 	"testing"
 
 	"github.com/cnzf1/gocore/confx"
@@ -32,38 +32,8 @@ type Config struct {
 	Group    Env
 }
 
-const toml = `
-root_str="root_string"
-
-[group]
-# 测试注释1
-key = "driver11"
-value = 1000 # 测试注释2
-
-[groups.grp1]
-[groups.grp1.dev]
-key = "grp1111"
-value = 1111
-
-[groups.grp1.pro]
-key = "grp2222"
-value = 2222
-
-[groups.grp2]
-[groups.grp2.dev]
-key = 'grp3333'
-value=3333
-`
-
 func TestTomlFile(t *testing.T) {
-	fullpath := "./tmp_file.toml"
-	file, _ := os.Create(fullpath)
-	defer func() {
-		file.Close()
-		os.Remove(file.Name())
-	}()
-
-	file.Write([]byte(toml))
+	fullpath := "./config.toml"
 
 	var cfg Config
 	confx.Parse(&cfg, fullpath)
@@ -82,8 +52,11 @@ func TestTomlFile(t *testing.T) {
 }
 
 func TestTomlBytes(t *testing.T) {
+	fullpath := "./config.toml"
+	data, _ := ioutil.ReadFile(fullpath)
+
 	var cfg Config
-	confx.ParseStr([]byte(toml), confx.TYPE_TOML, &cfg)
+	confx.ParseStr([]byte(data), confx.TYPE_TOML, &cfg)
 
 	fmt.Printf("%#v", cfg)
 	/*

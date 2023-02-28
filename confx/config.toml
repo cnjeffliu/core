@@ -1,8 +1,9 @@
 root_str="root_string"
 
 [group]
+# 测试注释1
 key = "driver11"
-value = 1000
+value = 1000 # 测试注释2
 
 [groups.grp1]
 [groups.grp1.dev]
@@ -16,4 +17,4 @@ value = 2222
 [groups.grp2]
 [groups.grp2.dev]
 key = 'grp3333'
-value = 3333
+value=3333
