@@ -2,7 +2,7 @@
 * @Author: cnzf1
 * @Date: 2021-08-05 17:31:50
  * @LastEditors: cnzf1
- * @LastEditTime: 2023-02-28 20:08:53
+ * @LastEditTime: 2023-03-01 16:50:56
 * @Description:
 */
 package codec_test
@@ -58,7 +58,7 @@ ZQIDAQAB
 	testBody = `this is the content`
 )
 
-func TestCrypt(t *testing.T) {
+func TestPubEncrypt(t *testing.T) {
 	var rsaObj codec.Crypter
 	var err error
 	rsaObj, err = codec.NewRsa(pubKey, priKey)
@@ -72,7 +72,19 @@ func TestCrypt(t *testing.T) {
 	assert.Equal(t, testBody, string(dec))
 }
 
-func TestCryptWithBase64(t *testing.T) {
+func TestPrivEncrypt(t *testing.T) {
+	rsaObj, err := codec.NewRsa(pubKey, priKey)
+	assert.Nil(t, err)
+
+	enc, err := rsaObj.EncryptEx([]byte(testBody))
+	assert.Nil(t, err)
+
+	dec, err := rsaObj.DecryptEx(enc)
+	assert.Nil(t, err)
+	assert.Equal(t, testBody, string(dec))
+}
+
+func TestPubEncryptWithBase64(t *testing.T) {
 	var rsaObj codec.Crypter
 	var err error
 	rsaObj, err = codec.NewRsa(pubKey, priKey)
@@ -86,12 +98,24 @@ func TestCryptWithBase64(t *testing.T) {
 	assert.Equal(t, testBody, string(dec))
 }
 
+func TestPrivEncryptWithBase64(t *testing.T) {
+	rsaObj, err := codec.NewRsa(pubKey, priKey)
+	assert.Nil(t, err)
+
+	enc, err := rsaObj.EncryptBase64Ex([]byte(testBody))
+	assert.Nil(t, err)
+
+	dec, err := rsaObj.DecryptBase64Ex(enc)
+	assert.Nil(t, err)
+	assert.Equal(t, testBody, string(dec))
+}
+
 func TestBadPubKey(t *testing.T) {
 	_, err := codec.NewRsa("foo", "boo")
 	assert.Equal(t, codec.ErrPrivKeyNotRsa, err)
 }
 
-func TestCreateRsaCrypt(t *testing.T) {
+func TestCreateRsaPubEncrypt(t *testing.T) {
 	content := strings.Repeat("H", 5) + "e"
 
 	var rsaObj codec.Crypter
