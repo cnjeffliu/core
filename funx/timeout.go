@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2021-08-18 18:07:12
  * @LastEditors: cnzf1
- * @LastEditTime: 2021-11-26 15:29:06
+ * @LastEditTime: 2023-01-11 13:46:55
  * @Description: 控制超时时间运行函数
  */
 package funx
@@ -10,6 +10,8 @@ package funx
 import (
 	"context"
 	"time"
+
+	"github.com/cnzf1/gocore/lang"
 )
 
 var (
@@ -32,7 +34,7 @@ func DoWithTimeout(fn func() error, timeout time.Duration, opts ...DoOption) err
 	defer cancel()
 
 	done := make(chan error, 1)
-	panicChan := make(chan interface{}, 1)
+	panicChan := make(chan lang.AnyType, 1)
 	go func() {
 		defer func() {
 			if p := recover(); p != nil {
