@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2019-01-26 15:20:02
  * @LastEditors: cnzf1
- * @LastEditTime: 2022-12-02 23:27:39
+ * @LastEditTime: 2023-03-17 18:36:58
  * @Description: 日志组件封装
  */
 package logx
@@ -31,21 +31,82 @@ var levelMap = map[string]zapcore.Level{
 	"fatal":  zapcore.FatalLevel,
 }
 
-func Init(filename ...string) {
-	f := "./log/debug.log"
-	if len(filename) > 0 && len(filename[0]) > 0 {
-		f = filename[0]
+type config struct {
+	filename   string
+	level      string
+	maxSize    int
+	maxBackups int
+	maxAge     int
+	compress   bool
+}
+
+type OptionFunc func(c *config)
+
+// WithPath alters the saved log full path, for example "./log/debug.log"
+func WithPath(filename string) OptionFunc {
+	return func(c *config) {
+		c.filename = filename
+	}
+}
+
+// WithLevel alters the log output level, options: debug/info/warn/error
+func WithLevel(level string) OptionFunc {
+	return func(c *config) {
+		c.level = strings.ToLower(level)
+	}
+}
+
+// WithMaxSize alters the max size of a single log file, default 100Mbit
+func WithMaxSize(maxSize int) OptionFunc {
+	return func(c *config) {
+		c.maxSize = maxSize
+	}
+}
+
+// WithBackups alters the max num of old log files to retain, default 10
+func WithBackups(maxBackups int) OptionFunc {
+	return func(c *config) {
+		c.maxBackups = maxBackups
+	}
+}
+
+// WithMaxAge alters the max num of days to retain old log files, default 7 days
+func WithMaxAge(maxAge int) OptionFunc {
+	return func(c *config) {
+		c.maxAge = maxAge
+	}
+}
+
+// WithCompress determines if the rotated log files should be compressed, default false
+func WithCompress(compress bool) OptionFunc {
+	return func(c *config) {
+		c.compress = compress
+	}
+}
+
+func Init(opts ...OptionFunc) {
+	c := &config{
+		filename:   "./log/debug.log",
+		level:      "info",
+		maxSize:    100,
+		maxBackups: 10,
+		maxAge:     7,
+		compress:   false,
+	}
+
+	for _, opt := range opts {
+		opt(c)
 	}
 
 	aLevel = zap.NewAtomicLevel()
-	aLevel.SetLevel(getLogLevel("debug"))
+	aLevel.SetLevel(getLogLevel(c.level))
 
 	hook := lumberjack.Logger{
-		Filename:   f,
-		MaxSize:    200, // megabytes
-		MaxBackups: 10,
-		MaxAge:     7,    //days
-		Compress:   true, // disabled by default
+		Filename:   c.filename,
+		MaxSize:    c.maxSize,
+		MaxBackups: c.maxBackups,
+		MaxAge:     c.maxAge,   //days
+		Compress:   c.compress, // disabled by default
 	}
 
 	fileWriter := zapcore.AddSync(&hook)

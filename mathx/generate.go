@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2022-12-13 12:02:38
  * @LastEditors: cnzf1
- * @LastEditTime: 2023-01-09 17:16:59
+ * @LastEditTime: 2023-03-29 11:23:09
  * @Description:
  */
 package mathx
@@ -14,8 +14,8 @@ import (
 	"github.com/cnzf1/gocore/timex"
 )
 
-// GenerateRandomStr return a random string, size specify the string length.
-func GenerateRandomStr(size int) []byte {
+// RandStr return a random string, size specify the string length.
+func RandStr(size int) []byte {
 	const s = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ"
 	var out []byte
 	var length = len(s)

@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2022-07-20 13:56:45
  * @LastEditors: cnzf1
- * @LastEditTime: 2023-01-09 17:26:51
+ * @LastEditTime: 2023-03-25 23:07:36
  * @Description:
  */
 package timex
@@ -17,14 +17,15 @@ const (
 	TIME_LAYOUT_MONTH                 = "2006-01"                       // YYYY-MM
 	TIME_LAYOUT_DAY                   = "2006-01-02"                    // YYYY-MM-DD
 	TIME_LAYOUT_MINUTE                = "2006-01-02 15:04"              // YYYY-MM-DD HH:mm
-	TIME_LAYOUT_SECOND                = "2006-01-02 15:04:05"           // YYYY-MM-DD HH-mm:SS
-	TIME_LAYOUT_MILLSECOND            = "2006-01-02 15:04:05.000"       // YYYY-MM-DD HH-mm:SS.NNN
-	TIME_LAYOUT_MICROSECOND           = "2006-01-02 15:04:05.000000"    // YYYY-MM-DD HH-mm:SS.NNNNNN
-	TIME_LAYOUT_NANOSECOND            = "2006-01-02 15:04:05.000000000" // YYYY-MM-DD HH-mm:SS.NNNNNNNNN
+	TIME_LAYOUT_SECOND                = "2006-01-02 15:04:05"           // YYYY-MM-DD HH:mm:SS
+	TIME_LAYOUT_MILLSECOND            = "2006-01-02 15:04:05.000"       // YYYY-MM-DD HH:mm:SS.NNN
+	TIME_LAYOUT_MICROSECOND           = "2006-01-02 15:04:05.000000"    // YYYY-MM-DD HH:mm:SS.NNNNNN
+	TIME_LAYOUT_NANOSECOND            = "2006-01-02 15:04:05.000000000" // YYYY-MM-DD HH:mm:SS.NNNNNNNNN
 	TIME_LAYOUT_COMPACT_DAY           = "20060102"                      // YYYYMMDD
-	TIME_LAYOUT_COMPACT_SIMPLE_SECOND = "150405"                        // hhmmss
-	TIME_LAYOUT_COMPACT_EXT_SECOND    = "0102150405"                    // MMDDhhmmss
-	TIME_LAYOUT_COMPACT_SECOND        = "20060102150405"                // YYYYMMDDhhmmss
+	TIME_LAYOUT_COMPACT_SIMPLE_SECOND = "150405"                        // HHmmSS
+	TIME_LAYOUT_COMPACT_EXT_SECOND    = "0102150405"                    // MMDDHHmmSS
+	TIME_LAYOUT_COMPACT_SECOND        = "20060102150405"                // YYYYMMDDHHmmSS
+	TIME_LAYOUT_COMPACT_MILLSECOND    = "20060102150405.000"            // YYYYMMDDHHmmSS.NNN
 )
 
 // NowS returns the current seconds.
@@ -40,6 +41,11 @@ func NowMs() int64 {
 // NowUs returns the current microseconds.
 func NowUs() int64 {
 	return time.Now().UnixNano() / int64(time.Microsecond)
+}
+
+// NowStr returns the current time string.
+func NowStr(layout string) string {
+	return time.Now().Format(layout)
 }
 
 // input format is 2022-01-01 01:00:00
@@ -148,6 +154,7 @@ func SubYearSetsEx(before, last time.Time, useFirst bool, useLast bool) []string
 }
 
 // SubMonSets return the month set during before and last.
+// seps represent separator, default is '-'
 //
 // For example:
 //
@@ -162,6 +169,7 @@ func SubMonSets(before, last time.Time, seps ...string) []string {
 // SubMonSetsEx return the month set during before and last.
 // useFirst represent include the month of before.
 // useLast represent include the month of last.
+// seps represent separator, default is '-'
 //
 // For example:
 //
@@ -199,6 +207,7 @@ func SubMonSetsEx(before, last time.Time, useFirst bool, useLast bool, seps ...s
 }
 
 // SubDaySets return the date set during before and last.
+// seps represent separator, default is '-'
 //
 // For example:
 //
@@ -213,6 +222,7 @@ func SubDaySets(before, last time.Time, seps ...string) []string {
 // SubDaySetsEx return the date set during before and last.
 // useFirst represent include the date of before.
 // useLast represent include the date of last.
+// seps represent separator, default is '-'
 //
 // For example:
 //

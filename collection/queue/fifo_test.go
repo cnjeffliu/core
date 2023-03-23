@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2022-07-20 14:06:24
  * @LastEditors: cnzf1
- * @LastEditTime: 2022-09-08 09:43:18
+ * @LastEditTime: 2023-03-30 17:30:19
  * @Description:
  */
 package queue_test
@@ -12,15 +12,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cnzf1/gocore/queue"
+	"github.com/cnzf1/gocore/collection/queue"
 )
 
 func TestBasic(t *testing.T) {
 	tests := []struct {
-		queue *queue.Queue
+		fifo *queue.FIFOQueue
 	}{
 		{
-			queue: queue.NewQueue(),
+			fifo: queue.NewFIFOQueue(),
 		},
 	}
 	for _, test := range tests {
@@ -34,7 +34,7 @@ func TestBasic(t *testing.T) {
 			go func(i int) {
 				defer producerWG.Done()
 				for j := 0; j < 50; j++ {
-					test.queue.Add(i)
+					test.fifo.Add(i)
 					time.Sleep(time.Millisecond)
 				}
 			}(i)
@@ -48,7 +48,7 @@ func TestBasic(t *testing.T) {
 			go func(i int) {
 				defer consumerWG.Done()
 				for {
-					item, quit := test.queue.Get()
+					item, quit := test.fifo.Get()
 					if item == "added after shutdown!" {
 						t.Errorf("Got an item added after shutdown.")
 					}
@@ -58,26 +58,26 @@ func TestBasic(t *testing.T) {
 					t.Logf("Worker %v: begin processing %v", i, item)
 					time.Sleep(3 * time.Millisecond)
 					t.Logf("Worker %v: done processing %v", i, item)
-					test.queue.Done(item)
+					test.fifo.Done(item)
 				}
 			}(i)
 		}
 
 		producerWG.Wait()
-		test.queue.Add("added after shutdown!")
+		test.fifo.Add("added after shutdown!")
 		consumerWG.Wait()
-		if test.queue.Len() != 0 {
-			t.Errorf("Expected the queue to be empty, had: %v items", test.queue.Len())
+		if test.fifo.Len() != 0 {
+			t.Errorf("Expected the fifo to be empty, had: %v items", test.fifo.Len())
 		}
 	}
 }
 
 func TestAddWhileProcessing(t *testing.T) {
 	tests := []struct {
-		queue *queue.Queue
+		fifo *queue.FIFOQueue
 	}{
 		{
-			queue: queue.NewQueue(),
+			fifo: queue.NewFIFOQueue(),
 		},
 	}
 	for _, test := range tests {
@@ -89,7 +89,7 @@ func TestAddWhileProcessing(t *testing.T) {
 		for i := 0; i < producers; i++ {
 			go func(i int) {
 				defer producerWG.Done()
-				test.queue.Add(i)
+				test.fifo.Add(i)
 			}(i)
 		}
 
@@ -104,29 +104,29 @@ func TestAddWhileProcessing(t *testing.T) {
 				// This tests the dirty-while-processing case.
 				counters := map[interface{}]int{}
 				for {
-					item, quit := test.queue.Get()
+					item, quit := test.fifo.Get()
 					if quit {
 						return
 					}
 					counters[item]++
 					if counters[item] < 2 {
-						test.queue.Add(item)
+						test.fifo.Add(item)
 					}
-					test.queue.Done(item)
+					test.fifo.Done(item)
 				}
 			}(i)
 		}
 
 		producerWG.Wait()
 		consumerWG.Wait()
-		if test.queue.Len() != 0 {
-			t.Errorf("Expected the queue to be empty, had: %v items", test.queue.Len())
+		if test.fifo.Len() != 0 {
+			t.Errorf("Expected the fifo to be empty, had: %v items", test.fifo.Len())
 		}
 	}
 }
 
 func TestLen(t *testing.T) {
-	q := queue.NewQueue()
+	q := queue.NewFIFOQueue()
 	q.Add("foo")
 	if e, a := 1, q.Len(); e != a {
 		t.Errorf("Expected %v, got %v", e, a)
@@ -135,14 +135,14 @@ func TestLen(t *testing.T) {
 	if e, a := 2, q.Len(); e != a {
 		t.Errorf("Expected %v, got %v", e, a)
 	}
-	q.Add("foo") // should not increase the queue length.
+	q.Add("foo") // should not increase the fifo length.
 	if e, a := 2, q.Len(); e != a {
 		t.Errorf("Expected %v, got %v", e, a)
 	}
 }
 
 func TestReinsert(t *testing.T) {
-	q := queue.NewQueue()
+	q := queue.NewFIFOQueue()
 	q.Add("foo")
 
 	// Start processing
@@ -157,7 +157,7 @@ func TestReinsert(t *testing.T) {
 	// Finish it up
 	q.Done(i)
 
-	// It should be back on the queue
+	// It should be back on the fifo
 	i, _ = q.Get()
 	if i != "foo" {
 		t.Errorf("Expected %v, got %v", "foo", i)
@@ -167,13 +167,13 @@ func TestReinsert(t *testing.T) {
 	q.Done(i)
 
 	if a := q.Len(); a != 0 {
-		t.Errorf("Expected queue to be empty. Has %v items", a)
+		t.Errorf("Expected fifo to be empty. Has %v items", a)
 	}
 }
 
 func TestQueueDrainageUsingShutDownWithDrain(t *testing.T) {
 
-	q := queue.NewQueue()
+	q := queue.NewFIFOQueue()
 
 	q.Add("foo")
 	q.Add("bar")
@@ -205,7 +205,7 @@ func TestQueueDrainageUsingShutDownWithDrain(t *testing.T) {
 
 func TestNoQueueDrainageUsingShutDown(t *testing.T) {
 
-	q := queue.NewQueue()
+	q := queue.NewFIFOQueue()
 
 	q.Add("foo")
 	q.Add("bar")
@@ -228,7 +228,7 @@ func TestNoQueueDrainageUsingShutDown(t *testing.T) {
 
 func TestForceQueueShutdownUsingShutDown(t *testing.T) {
 
-	q := queue.NewQueue()
+	q := queue.NewFIFOQueue()
 
 	q.Add("foo")
 	q.Add("bar")
@@ -250,7 +250,7 @@ func TestForceQueueShutdownUsingShutDown(t *testing.T) {
 		_, shuttingDown = q.Get()
 	}
 
-	// Use ShutDown to force the queue to shut down (simulating a caller
+	// Use ShutDown to force the fifo to shut down (simulating a caller
 	// which can invoke this function on a second SIGTERM/SIGINT)
 	q.ShutDown()
 
@@ -260,7 +260,7 @@ func TestForceQueueShutdownUsingShutDown(t *testing.T) {
 }
 
 func TestQueueDrainageUsingShutDownWithDrainWithDirtyItem(t *testing.T) {
-	q := queue.NewQueue()
+	q := queue.NewFIFOQueue()
 
 	q.Add("foo")
 	gotten, _ := q.Get()
@@ -283,7 +283,7 @@ func TestQueueDrainageUsingShutDownWithDrainWithDirtyItem(t *testing.T) {
 	q.Done(gotten)
 
 	// `shuttingDown` becomes false because Done caused an item to go back into
-	// the queue.
+	// the fifo.
 	again, shuttingDown := q.Get()
 	if shuttingDown {
 		t.Fatalf("should not have been done")

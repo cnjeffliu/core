@@ -1,15 +1,21 @@
 package funx
 
-import "github.com/cnzf1/gocore/errorx"
+import (
+	"time"
+
+	"github.com/cnzf1/gocore/errorx"
+)
 
 const defaultRetryTimes = 3
+const defaultPeriod = 0
 
 type (
 	// RetryOption defines the method to customize DoWithRetry.
 	RetryOption func(*retryOptions)
 
 	retryOptions struct {
-		times int
+		times  int
+		period time.Duration
 	}
 )
 
@@ -23,6 +29,7 @@ func DoWithRetry(fn func() error, opts ...RetryOption) error {
 	var berr errorx.BatchError
 	for i := 0; i < options.times; i++ {
 		if err := fn(); err != nil {
+			time.Sleep(options.period)
 			berr.Add(err)
 		} else {
 			return nil
@@ -39,8 +46,16 @@ func WithRetry(times int) RetryOption {
 	}
 }
 
+// WithPeriod customize a DoWithRetry call with given period(ms).
+func WithPeriod(period time.Duration) RetryOption {
+	return func(options *retryOptions) {
+		options.period = period
+	}
+}
+
 func newRetryOptions() *retryOptions {
 	return &retryOptions{
-		times: defaultRetryTimes,
+		times:  defaultRetryTimes,
+		period: defaultPeriod,
 	}
 }

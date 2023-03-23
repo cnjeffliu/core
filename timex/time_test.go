@@ -2,12 +2,14 @@
  * @Author: cnzf1
  * @Date: 2022-10-21 23:40:50
  * @LastEditors: cnzf1
- * @LastEditTime: 2023-01-10 10:41:11
+ * @LastEditTime: 2023-03-25 23:39:20
  * @Description:
  */
+
 package timex_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -99,4 +101,32 @@ func BenchmarkSubDaySets(t *testing.B) {
 	for i := 0; i < t.N; i++ {
 		assert.Equal(t, []string{"20220130", "20220131", "20220201", "20220202"}, timex.SubDaySetsEx(before, after, useFirst, useLast, ""), "useFirst:%v useLast:%v", useFirst, useLast)
 	}
+}
+
+func TestNowStr(t *testing.T) {
+	type args struct {
+		layout string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: timex.TIME_LAYOUT_SECOND,
+			args: args{
+				layout: timex.TIME_LAYOUT_SECOND,
+			},
+			want: time.Now().Format(timex.TIME_LAYOUT_SECOND),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := timex.NowStr(tt.args.layout); got != tt.want {
+				t.Errorf("NowStr() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	fmt.Println(timex.NowStr(timex.TIME_LAYOUT_COMPACT_MILLSECOND))
 }
