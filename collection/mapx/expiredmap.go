@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2023-03-28 14:36:32
  * @LastEditors: cnzf1
- * @LastEditTime: 2023-03-29 13:47:13
+ * @LastEditTime: 2023-04-03 16:38:08
  * @Description:
  */
 package mapx
@@ -44,7 +44,7 @@ func WithTick(tick time.Duration) EMOption {
 	}
 }
 
-type DelCallBack func(key string, val lang.AnyType)
+type DelCallBack func(key string)
 
 func WithDelCallback(fn DelCallBack) EMOption {
 	return func(e *EMConfig) {
@@ -62,7 +62,6 @@ func NewExpiredMap(opts ...EMOption) *ExpiredMap {
 	}
 
 	c := &ExpiredMap{
-		m:     sync.Map{},
 		tick:  cfg.tick,
 		stop:  make(chan bool),
 		delFn: cfg.delFn,
@@ -129,11 +128,10 @@ func (c *ExpiredMap) Get(key string) (value lang.AnyType, ok bool) {
 }
 
 func (c *ExpiredMap) Delete(key string) {
-	val, _ := c.Get(key)
 	c.m.Delete(key)
 	c.size.Dec()
 	if c.delFn != nil {
-		c.delFn(key, val)
+		c.delFn(key)
 	}
 }
 

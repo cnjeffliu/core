@@ -2,7 +2,7 @@
  * @Author: cnzf1
  * @Date: 2023-03-27 19:23:22
  * @LastEditors: cnzf1
- * @LastEditTime: 2023-03-30 17:34:31
+ * @LastEditTime: 2023-04-03 16:30:38
  * @Description:
  */
 package task
@@ -42,7 +42,7 @@ func NewLocalStore() Store {
 		group:  make(map[string]*set.Set),
 		status: make(map[string]*localStoreItem),
 	}
-	fn := func(key string, val lang.AnyType) {
+	fn := func(key string) {
 		if v, ok := s.status[key]; ok {
 			s.group[v.grpID].Remove(key)
 		}
